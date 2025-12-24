@@ -1,43 +1,37 @@
 /* =========================================
    1. VARIABLES GLOBALES (PANEL DE CONTROL)
-   Si vendes la web, solo cambias esto.
    ========================================= */
 :root {
     /* --- PALETA DE COLORES (Tema: Urban Night) --- */
-    /* Color Principal (Marca/Logo/Botones) */
     --primary-color: #00F0FF;       /* Cian Neón */
     --primary-alt: #00aeb8;         /* Versión oscura para Hover */
     
     /* Fondos */
     --bg-body: #0F111A;             /* Fondo General (Casi negro) */
-    --bg-header: rgba(15, 17, 26, 0.8); /* Fondo semi-transparente para el Header */
-    --bg-card: #1E232E;             /* Fondo de tarjetas/secciones */
+    --bg-header: rgba(15, 17, 26, 0.8); /* Fondo semi-transparente header */
+    --bg-card: #1E232E;             /* Fondo de tarjetas */
     
     /* Textos */
     --text-title: #FFFFFF;          /* Títulos principales */
     --text-body: #94A3B8;           /* Párrafos y textos secundarios */
     
     /* --- TIPOGRAFÍA --- */
-    --font-title: 'Montserrat', sans-serif; /* Para impacto */
-    --font-body: 'Inter', sans-serif;       /* Para lectura */
+    --font-title: 'Montserrat', sans-serif; /* Títulos (Impacto) */
+    --font-body: 'Inter', sans-serif;       /* Texto (Lectura) */
     
     --h1-size: 2.5rem;
     --h2-size: 2rem;
     --normal-size: 1rem;
     --small-size: 0.875rem;
 
-    /* --- EFECTOS & UI --- */
-    --border-radius: 0px;           /* 0px = Estilo Urbano/Rudo. 12px = Estilo Moderno/Suave */
-    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --glow-effect: 0 0 15px rgba(0, 240, 255, 0.3); /* Brillo de neón */
-    
-    --transition: 0.3s ease-in-out; /* Velocidad de animaciones */
-    
-    /* --- Z-INDEX (Capas) --- */
+    /* --- UI & EFECTOS --- */
     --z-back: -10;
     --z-normal: 1;
     --z-tooltip: 10;
-    --z-fixed: 100; /* El header siempre encima */
+    --z-fixed: 100; /* Header siempre encima */
+    
+    --glow-effect: 0 0 15px rgba(0, 240, 255, 0.3); /* Brillo neón */
+    --transition: 0.3s ease-in-out; /* Velocidad animaciones */
 }
 
 /* =========================================
@@ -58,7 +52,7 @@ body {
     background-color: var(--bg-body);
     color: var(--text-body);
     font-size: var(--normal-size);
-    overflow-x: hidden; /* Evita scroll horizontal indeseado */
+    overflow-x: hidden; 
 }
 
 ul {
@@ -75,14 +69,10 @@ img {
     height: auto;
 }
 
-/* Clases Utilitarias (Reutilizables) */
+/* --- CLASES UTILITARIAS --- */
 .container {
     max-width: 1120px;
     margin-inline: 1.5rem;
-}
-
-.section {
-    padding-block: 5rem 2rem;
 }
 
 .text-highlight {
@@ -91,7 +81,7 @@ img {
 }
 
 /* =========================================
-   3. HEADER & NAV (DISEÑO)
+   3. HEADER & NAV
    ========================================= */
 .header {
     position: fixed;
@@ -99,71 +89,55 @@ img {
     left: 0;
     width: 100%;
     background-color: var(--bg-header);
-    backdrop-filter: blur(10px); /* Efecto vidrio borroso moderno */
-    -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+    backdrop-filter: blur(10px); /* Efecto vidrio */
+    -webkit-backdrop-filter: blur(10px);
     z-index: var(--z-fixed);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Línea sutil abajo */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: var(--transition);
 }
 
 .nav {
-    height: 3.5rem; /* Altura del header (aprox 56px) */
+    height: 3.5rem; /* 56px aprox */
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-/* Logo */
-.nav__logo {
-    color: var(--text-title);
-    font-family: var(--font-title);
-    font-weight: 800; /* Extra Bold */
-    font-size: 1.25rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Estilos de los Links del Menú (Desktop) */
-.nav__list {
-    display: flex;
-    gap: 2.5rem;
-}
-
-.nav__link {
-    color: var(--text-title);
-    font-weight: 600;
-    font-size: var(--small-size);
-    text-transform: uppercase;
-    transition: var(--transition);
     position: relative;
 }
 
-/* Efecto Hover en los Links (Línea que crece) */
-.nav__link::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background-color: var(--primary-color);
-    box-shadow: var(--glow-effect);
+/* --- LOGO --- */
+.nav__logo {
+    color: var(--text-title);
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* --- ACCIONES (Botón + Toggle) --- */
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Toggle (Hamburguesa) */
+.nav__toggle, 
+.nav__close {
+    font-size: 1.5rem;
+    color: var(--text-title);
+    cursor: pointer;
     transition: var(--transition);
 }
 
-.nav__link:hover::after {
-    width: 100%;
-}
-
-.nav__link:hover {
+.nav__toggle:hover,
+.nav__close:hover {
     color: var(--primary-color);
 }
 
 /* Botón Header (CTA) */
 .btn-header {
+    display: none; /* Oculto en móvil por defecto */
     padding: 0.6rem 1.5rem;
     background-color: transparent;
     border: 2px solid var(--primary-color);
@@ -173,7 +147,6 @@ img {
     font-size: var(--small-size);
     text-transform: uppercase;
     transition: var(--transition);
-    display: none; /* Oculto en móvil por defecto, lo activamos en media query */
 }
 
 .btn-header:hover {
@@ -182,62 +155,111 @@ img {
     box-shadow: var(--glow-effect);
 }
 
-/* Menú Hamburguesa (Icono) */
-.nav__toggle {
-    color: var(--text-title);
-    font-size: 1.5rem;
-    cursor: pointer;
-    display: none; /* Se mostrará solo en móvil */
-}
-
 /* =========================================
-   4. RESPONSIVE (MEDIA QUERIES)
+   4. MENÚ MÓVIL (Por defecto hasta 767px)
    ========================================= */
-
-/* Dispositivos Móviles (Hasta 767px) */
 @media screen and (max-width: 767px) {
     .nav__menu {
         position: fixed;
-        top: -100%; /* Oculto arriba */
+        top: -100%; /* Oculto arriba de la pantalla */
         left: 0;
         width: 100%;
         background-color: var(--bg-body);
         padding-block: 4rem;
         text-align: center;
-        transition: var(--transition);
+        transition: .4s; /* Un poco más lento para que se vea elegante */
         border-bottom: 1px solid var(--primary-color);
-    }
-
-    /* Clase que añadiremos con JS para abrir el menú */
-    .show-menu {
-        top: 3.5rem; /* Baja debajo del header */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .nav__list {
+        display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 2.5rem;
     }
-    
-    .nav__toggle {
-        display: block; /* Mostrar icono hamburguesa */
+
+    .nav__link {
+        color: var(--text-title);
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        transition: var(--transition);
+    }
+
+    .nav__link:hover {
+        color: var(--primary-color);
+    }
+
+    .nav__close {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
     }
 }
 
-/* Escritorio (Desde 768px en adelante) */
+/* Clase JS para mostrar el menú */
+.show-menu {
+    top: 0; /* Baja a la vista */
+}
+
+/* =========================================
+   5. RESPONSIVE DESKTOP (Desde 768px)
+   ========================================= */
 @media screen and (min-width: 768px) {
     .container {
         margin-inline: auto; /* Centrar contenedor */
     }
 
     .nav {
-        height: 5rem; /* Header más alto en PC */
+        height: 5rem; /* Header más alto */
     }
 
-    .nav__toggle {
-        display: none; /* Ocultar hamburguesa */
+    .nav__toggle, 
+    .nav__close {
+        display: none; /* Ocultamos iconos de móvil */
+    }
+
+    .nav__menu {
+        position: static; /* Quitamos posición fija */
+        padding: 0;
+        background: transparent;
+        width: auto;
+        border: none;
+        box-shadow: none;
+    }
+
+    .nav__list {
+        flex-direction: row; /* Menú horizontal */
+        gap: 2.5rem;
+    }
+
+    .nav__link {
+        font-size: var(--small-size);
+        position: relative;
+    }
+
+    /* Efecto subrayado animado */
+    .nav__link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background-color: var(--primary-color);
+        box-shadow: var(--glow-effect);
+        transition: var(--transition);
+    }
+
+    .nav__link:hover::after {
+        width: 100%;
+    }
+
+    .nav__link:hover {
+        color: var(--primary-color);
     }
 
     .btn-header {
-        display: inline-block; /* Mostrar botón "Reservar" */
+        display: inline-block; /* Mostrar botón */
     }
-      }
+}
