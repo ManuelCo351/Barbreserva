@@ -416,4 +416,163 @@ img {
         background-attachment: fixed; /* Efecto Parallax opcional en PC */
     }
    }
+/* =========================================
+   5. SECCIÓN SERVICIOS (TARJETAS URBANAS)
+   ========================================= */
+
+/* --- AJUSTES GENERALES DE SECCIÓN --- */
+.section {
+    padding-block: 5rem 2rem; /* Espaciado arriba y abajo */
+}
+
+.section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--text-title);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.section__subtitle {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* --- GRID LAYOUT (La Rejilla Responsiva) --- */
+.services__grid {
+    display: grid;
+    /* Esto hace magia: crea columnas automáticas según el ancho */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    padding-bottom: 2rem;
+}
+
+/* --- DISEÑO DE LA TARJETA (CARD) --- */
+.services__card {
+    background-color: #161922; /* Un tono más claro que el fondo negro */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem 2rem;
+    border-radius: 1px; /* Bordes casi rectos estilo urbano */
+    text-align: center;
+    transition: 0.4s ease;
+    position: relative;
+    overflow: hidden; /* Para efectos de brillo */
+}
+
+/* Efecto Hover: La tarjeta se levanta y brilla el borde */
+.services__card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 40px -10px rgba(0, 240, 255, 0.15);
+}
+
+/* --- ELEMENTOS DE LA TARJETA --- */
+
+/* Caja del Icono */
+.services__icon-box {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 240, 255, 0.05); /* Cian muy transparente */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1.5rem; /* Centrado horizontal */
+    transition: 0.4s;
+}
+
+.services__icon-box i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+/* Al pasar el mouse, el icono se llena de color */
+.services__card:hover .services__icon-box {
+    background-color: var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+}
+
+.services__card:hover .services__icon-box i {
+    color: var(--bg-body); /* El icono se vuelve oscuro */
+}
+
+/* Título del Servicio */
+.services__title {
+    font-size: 1.25rem;
+    color: var(--text-title);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+/* Descripción */
+.services__description {
+    font-size: 0.95rem;
+    color: var(--text-body);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Precio (Grande y destacado) */
+.services__price {
+    display: block;
+    font-size: 1.5rem;
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: var(--text-title);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Botón de la tarjeta */
+.services__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.services__button i {
+    transition: 0.3s;
+}
+
+.services__button:hover {
+    color: #fff; /* Se vuelve blanco al pasar el mouse */
+}
+
+.services__button:hover i {
+    transform: translateX(5px); /* La flechita se mueve */
+}
+
+/* =========================================
+   ANIMACIONES DE SCROLL (REVEAL)
+   Esto hace que aparezcan suavemente
+   ========================================= */
+/* Estado Inicial: Invisible y desplazado abajo */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+/* Estado Final: Visible y en su lugar (JS agrega esta clase) */
+.active-reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Retrasos escalonados para las tarjetas (opcional para más estilo) */
+.services__card:nth-child(2) { transition-delay: 0.2s; }
+.services__card:nth-child(3) { transition-delay: 0.4s; }
    
