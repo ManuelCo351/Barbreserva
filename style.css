@@ -263,3 +263,210 @@ img {
         display: inline-block; /* Mostrar botón */
     }
 }
+/* =========================================
+   6. HERO SECTION (La Portada)
+   ========================================= */
+.hero {
+    position: relative;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    width: 100%;
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+    overflow: hidden;
+}
+
+/* --- FONDO E IMAGEN --- */
+.hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2; /* Al fondo de todo */
+}
+
+/* El Overlay (Capa oscura encima de la foto) */
+.hero__bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Degradado: Negro sólido abajo -> Transparente arriba */
+    background: linear-gradient(180deg, 
+                var(--bg-body) 0%, 
+                rgba(15, 17, 26, 0.8) 50%, 
+                rgba(15, 17, 26, 0.4) 100%);
+    z-index: -1;
+}
+
+/* --- CONTENIDO --- */
+.hero__container {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    padding-top: 4rem; /* Espacio para el header fijo */
+}
+
+.hero__content {
+    max-width: 600px; /* Que el texto no se estire demasiado */
+    z-index: var(--z-normal);
+}
+
+/* Elementos para animar (Estado inicial: Oculto) */
+.hero__subtitle, 
+.hero__title, 
+.hero__description, 
+.hero__buttons, 
+.hero__social {
+    opacity: 0;
+    transform: translateY(30px); /* Empujados hacia abajo */
+    transition: 0.8s ease-out; /* Suavidad de la animación */
+}
+
+/* Clase que agrega JS para mostrar (Estado final) */
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tipografía */
+.hero__subtitle {
+    display: block;
+    font-size: var(--small-size);
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.hero__title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive typography: min, ideal, max */
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--text-title);
+}
+
+.hero__description {
+    font-size: 1.1rem;
+    color: var(--text-body);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* --- BOTONES --- */
+.hero__buttons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap; /* Si la pantalla es muy chica, bajan */
+}
+
+/* Estilo específico para el botón secundario (Link) */
+.btn--link {
+    color: var(--text-title);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.btn--link:hover {
+    color: var(--primary-color);
+}
+
+/* --- REDES SOCIALES (Lateral) --- */
+.hero__social {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.hero__social-link {
+    font-size: 1.5rem;
+    color: var(--text-body);
+    transition: var(--transition);
+}
+
+.hero__social-link:hover {
+    color: var(--primary-color);
+    transform: translateY(-3px); /* Pequeño salto */
+}
+
+/* --- SCROLL INDICATOR (Flecha abajo) --- */
+.hero__scroll {
+    position: absolute;
+    bottom: 2rem;
+    right: 0; /* A la derecha en móvil por defecto o izquierda según diseño */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-body);
+    animation: bounce 2s infinite; /* Animación de rebote infinita */
+    cursor: pointer;
+}
+
+.hero__scroll-text {
+    font-size: var(--small-size);
+    font-weight: 600;
+    writing-mode: vertical-rl; /* Texto vertical */
+    text-orientation: mixed;
+}
+
+/* Animación Bounce (Rebote) */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* =========================================
+   MEDIA QUERIES (Ajustes Escritorio)
+   ========================================= */
+@media screen and (min-width: 768px) {
+    .hero__bg {
+        /* En PC, la imagen se puede ajustar mejor */
+        background-position: center top; 
+    }
+
+    .hero__container {
+        grid-template-columns: 1fr max-content; /* Texto izquierda - Redes/Scroll derecha */
+        align-items: center;
+    }
+
+    /* Redes Sociales en Vertical a la derecha */
+    .hero__social {
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 0;
+        position: relative;
+    }
+
+    /* Línea decorativa conectando las redes */
+    .hero__social::after {
+        content: '';
+        position: absolute;
+        top: -3rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 1px;
+        height: 2rem;
+        background-color: var(--primary-color);
+    }
+    
+    .hero__scroll {
+        /* En escritorio lo ponemos abajo a la izquierda o centro */
+        left: 0;
+        right: auto;
+        flex-direction: row; /* Texto horizontal */
+        writing-mode: horizontal-tb;
+    }
+   }
+   
