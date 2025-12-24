@@ -1,42 +1,31 @@
 /* =========================================
-   1. VARIABLES GLOBALES (PANEL DE CONTROL)
+   1. VARIABLES & CONFIGURACIÓN (TEMA: URBAN NEON)
    ========================================= */
 :root {
-    /* --- PALETA DE COLORES (Tema: Urban Night) --- */
-    --primary-color: #00F0FF;       /* Cian Neón */
-    --primary-alt: #00aeb8;         /* Versión oscura para Hover */
+    /* --- COLORES --- */
+    --primary-color: #00F0FF;       /* Cian Neón (Botones y acentos) */
+    --primary-hover: #00aeb8;       /* Cian más oscuro */
     
-    /* Fondos */
-    --bg-body: #0F111A;             /* Fondo General (Casi negro) */
-    --bg-header: rgba(15, 17, 26, 0.8); /* Fondo semi-transparente header */
-    --bg-card: #1E232E;             /* Fondo de tarjetas */
+    --bg-body: #0F111A;             /* Fondo principal (Casi negro) */
+    --bg-header: rgba(15, 17, 26, 0.95); /* Fondo header (casi sólido) */
+    --bg-menu-mobile: #0F111A;      /* Fondo del menú en celular */
     
-    /* Textos */
-    --text-title: #FFFFFF;          /* Títulos principales */
-    --text-body: #94A3B8;           /* Párrafos y textos secundarios */
+    --text-title: #FFFFFF;          /* Blanco puro */
+    --text-body: #94A3B8;           /* Gris azulado para lectura */
     
-    /* --- TIPOGRAFÍA --- */
-    --font-title: 'Montserrat', sans-serif; /* Títulos (Impacto) */
-    --font-body: 'Inter', sans-serif;       /* Texto (Lectura) */
+    /* --- FUENTES --- */
+    --font-title: 'Montserrat', sans-serif; /* Títulos */
+    --font-body: 'Inter', sans-serif;       /* Texto */
     
-    --h1-size: 2.5rem;
-    --h2-size: 2rem;
-    --normal-size: 1rem;
-    --small-size: 0.875rem;
-
-    /* --- UI & EFECTOS --- */
+    /* --- LAYOUT & Z-INDEX --- */
+    --header-height: 3.5rem;
     --z-back: -10;
     --z-normal: 1;
-    --z-tooltip: 10;
-    --z-fixed: 100; /* Header siempre encima */
-    
-    --glow-effect: 0 0 15px rgba(0, 240, 255, 0.3); /* Brillo neón */
-    --transition: 0.3s ease-in-out; /* Velocidad animaciones */
+    --z-fixed: 100;    /* Header fijo */
+    --z-modal: 1000;   /* Menú móvil encima de todo */
 }
 
-/* =========================================
-   2. RESET & BASE
-   ========================================= */
+/* --- RESET BÁSICO --- */
 * {
     box-sizing: border-box;
     padding: 0;
@@ -49,10 +38,10 @@ html {
 
 body {
     font-family: var(--font-body);
+    font-size: 1rem;
     background-color: var(--bg-body);
     color: var(--text-body);
-    font-size: var(--normal-size);
-    overflow-x: hidden; 
+    overflow-x: hidden; /* Evita scroll horizontal */
 }
 
 ul {
@@ -62,14 +51,16 @@ ul {
 a {
     text-decoration: none;
     color: inherit;
+    transition: 0.3s;
 }
 
 img {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
-/* --- CLASES UTILITARIAS --- */
+/* --- CLASES DE UTILIDAD --- */
 .container {
     max-width: 1120px;
     margin-inline: 1.5rem;
@@ -77,296 +68,216 @@ img {
 
 .text-highlight {
     color: var(--primary-color);
-    text-shadow: var(--glow-effect);
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
 }
 
 /* =========================================
-   3. HEADER & NAV (ESTILOS BASE - MÓVIL PRIMERO)
+   2. HEADER & NAVEGACIÓN (ESTRATEGIA MOBILE FIRST)
+   Aquí definimos cómo se ve en CELULAR por defecto.
    ========================================= */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--bg-header); /* Asegúrate de tener esta variable o usa #0F111A */
-    backdrop-filter: blur(10px);
-    z-index: 1000;
+    background-color: var(--bg-header);
+    z-index: var(--z-fixed);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .nav {
-    height: 3.5rem;
+    height: var(--header-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
 }
 
+/* Logo */
 .nav__logo {
-    color: #fff; /* O tu variable var(--text-title) */
+    color: var(--text-title);
+    font-family: var(--font-title);
     font-weight: 800;
     font-size: 1.2rem;
-    z-index: 1010; /* Encima del menú desplegable */
+    letter-spacing: 1px;
+    z-index: 1010; /* Encima de todo */
 }
 
-/* --- MENÚ OCULTO EN MÓVIL --- */
+/* --- MENÚ MÓVIL (EL NÚCLEO DEL PROBLEMA) --- */
+/* Por defecto, el menú está oculto ARRIBA (-100%) */
 .nav__menu {
     position: fixed;
-    top: -100%; /* Escondido arriba */
+    top: -100%;             /* ESTADO INICIAL: OCULTO */
     left: 0;
     width: 100%;
-    background-color: #0F111A; /* Color de fondo sólido */
-    padding-top: 5rem;
-    padding-bottom: 3rem;
-    text-align: center;
-    transition: 0.4s;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    z-index: 1000;
+    height: auto;           /* Se adapta al contenido */
+    background-color: var(--bg-menu-mobile);
+    padding-top: 6rem;      /* Espacio superior */
+    padding-bottom: 4rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    transition: top 0.4s ease-in-out; /* Animación suave */
+    z-index: var(--z-modal);
     
-    /* Flex para centrar los items */
+    /* Centrado de elementos */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 2.5rem;
 }
 
-/* Clase que JS añade para mostrarlo */
+/* CLASE ACTIVADORA (JS agrega esto para bajar el menú) */
 .show-menu {
-    top: 0; 
+    top: 0; /* AL APLICAR ESTA CLASE, EL MENÚ BAJA */
 }
 
+/* Enlaces del menú móvil */
 .nav__link {
-    font-size: 1.2rem;
-    color: #fff;
+    font-family: var(--font-title);
+    font-size: 1.5rem; /* Letra grande para celular */
+    font-weight: 700;
+    color: var(--text-title);
     text-transform: uppercase;
-    font-weight: 600;
 }
 
+.nav__link:hover {
+    color: var(--primary-color);
+}
+
+/* --- BOTÓN CERRAR (X) --- */
 .nav__close {
     position: absolute;
-    top: 1rem;
+    top: 1.5rem;
     right: 1.5rem;
-    font-size: 2rem;
+    font-size: 2.5rem; /* Icono GRANDE para tocar fácil */
     color: var(--primary-color);
     cursor: pointer;
+    transition: 0.3s;
 }
 
-/* --- ACCIONES (Botón + Hamburguesa) --- */
+.nav__close:hover {
+    transform: rotate(90deg); /* Efecto giro al tocar */
+}
+
+/* --- BOTONES DE ACCIÓN (Hamburguesa y Reservar) --- */
 .nav__actions {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-/* El botón de reservar en móvil puede ser opcional, 
-   pero si lo quieres dejar, lo hacemos más chico */
+/* Icono Hamburguesa (Abrir) */
+.nav__toggle {
+    font-size: 1.8rem;
+    color: var(--text-title);
+    cursor: pointer;
+}
+
+/* Botón Header (Oculto en móvil muy pequeño, visible si cabe) */
 .btn-header {
-    padding: 0.5rem 1rem;
-    font-size: 0.75rem;
-    border: 1px solid var(--primary-color);
+    display: none; /* Por defecto oculto en móvil para ahorrar espacio */
+    padding: 0.5rem 1.2rem;
+    border: 2px solid var(--primary-color);
     color: var(--primary-color);
     font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
-
-/* ICONO HAMBURGUESA (El que faltaba) */
-.nav__toggle {
-    font-size: 1.5rem;
-    color: #fff;
-    cursor: pointer;
-    display: block; /* Forzamos que se vea */
-}
-
 /* =========================================
-   MEDIA QUERY: ESCRITORIO (PC - Min 768px)
-   Aquí cambiamos todo para pantalla grande
+   3. VERSIÓN ESCRITORIO (PC - Desde 768px)
+   Aquí "reseteamos" el menú móvil para que se vea normal en PC.
    ========================================= */
 @media screen and (min-width: 768px) {
+    /* Ajustes generales */
     .nav {
-        height: 5rem;
+        height: 5rem; /* Header más alto en PC */
     }
 
-    .nav__toggle, 
-    .nav__close {
-        display: none; /* Ocultamos iconos de móvil */
-    }
-
-    .nav__menu {
-        position: static; /* Quitamos posición fija */
-        top: auto;
-        padding: 0;
-        background: transparent;
-        width: auto;
-        box-shadow: none;
-        display: block; /* Bloque normal */
-        flex-direction: row;
-    }
-
-    .nav__list {
-        display: flex;
-        flex-direction: row;
-        gap: 2rem;
-    }
-
-    .nav__link {
-        font-size: 0.9rem; /* Letra más chica y elegante en PC */
-    }
-
-    .btn-header {
-        padding: 0.7rem 1.5rem; /* Botón grande en PC */
-        font-size: 0.9rem;
-    }
-}
-
-
-/* =========================================
-   4. MENÚ MÓVIL (SOLO PARA CELULARES)
-   ========================================= */
-/* ==================================================
-   CORRECCIÓN FINAL MENÚ MÓVIL (Pegar al final del archivo)
-   ================================================== */
-@media screen and (max-width: 767px) {
-    /* 1. Ocultar el menú por defecto */
-    .nav__menu {
-        position: fixed;
-        top: -150% !important; /* Lo mandamos bien arriba */
-        left: 0;
-        width: 100%;
-        background-color: #0F111A;
-        padding-top: 6rem;
-        padding-bottom: 3rem;
-        transition: 0.4s;
-        z-index: 9999; /* Encima de todo */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-
-    /* 2. Clase para mostrarlo (cuando el JS funciona) */
-    .nav__menu.show-menu {
-        top: 0 !important;
-    }
-
-    /* 3. Estilo de los enlaces en móvil */
-    .nav__link {
-        color: #fff;
-        font-size: 1.5rem;
-        font-weight: 600;
-        display: block;
-    }
-
-    /* 4. Arreglo del botón cerrar (X) */
-    .nav__close {
-        display: block !important;
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        font-size: 2.5rem;
-        color: #00F0FF; /* Cian Neón */
-        cursor: pointer;
-        z-index: 10000; /* Lo más alto posible para que sea clickeable */
-        width: 40px;    /* Zona de click asegurada */
-        height: 40px;
-    }
-    
-    /* 5. Asegurar que la hamburguesa se vea */
-    .nav__toggle {
-        display: block !important;
-        font-size: 1.8rem;
-        cursor: pointer;
-    }
-}
-
-
-/* =========================================
-   5. RESPONSIVE DESKTOP (Desde 768px)
-   ========================================= */
-@media screen and (min-width: 768px) {
     .container {
-        margin-inline: auto; /* Centrar contenedor */
+        margin-inline: auto; /* Centrar el contenido */
     }
 
-    .nav {
-        height: 5rem; /* Header más alto */
-    }
-
+    /* --- OCULTAR ELEMENTOS MÓVILES --- */
     .nav__toggle, 
     .nav__close {
-        display: none; /* Ocultamos iconos de móvil */
+        display: none; /* No necesitamos hamburguesa ni X en PC */
     }
 
+    /* --- TRANSFORMACIÓN DEL MENÚ --- */
     .nav__menu {
-        position: static; /* Quitamos posición fija */
-        padding: 0;
-        background: transparent;
+        /* Anulamos los estilos de móvil */
+        position: static;
+        top: auto;
         width: auto;
-        border: none;
+        height: auto;
+        background-color: transparent;
+        padding: 0;
         box-shadow: none;
+        
+        /* Lo ponemos horizontal */
+        display: flex;
+        flex-direction: row;
+        gap: 3rem;
+        transform: none; /* Quitamos animaciones de movimiento */
+        transition: none;
     }
 
-    .nav__list {
-        flex-direction: row; /* Menú horizontal */
-        gap: 2.5rem;
-    }
-
+    /* Enlaces más pequeños y elegantes */
     .nav__link {
-        font-size: var(--small-size);
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: uppercase;
         position: relative;
     }
 
-    /* Efecto subrayado animado */
+    /* Animación de subrayado al pasar el mouse */
     .nav__link::after {
         content: '';
         position: absolute;
-        bottom: -4px;
+        bottom: -5px;
         left: 0;
         width: 0%;
         height: 2px;
         background-color: var(--primary-color);
-        box-shadow: var(--glow-effect);
-        transition: var(--transition);
+        transition: 0.3s;
+        box-shadow: 0 0 10px var(--primary-color);
     }
 
     .nav__link:hover::after {
         width: 100%;
     }
 
-    .nav__link:hover {
-        color: var(--primary-color);
-    }
-
+    /* Mostrar botón de reservar en PC */
     .btn-header {
-        display: inline-block; /* Mostrar botón */
+        display: inline-block;
     }
 }
+
 /* =========================================
-   6. HERO SECTION (La Portada)
+   4. HERO SECTION (La Portada Principal)
    ========================================= */
 .hero {
     position: relative;
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    height: 100vh; /* Ocupa toda la pantalla */
     width: 100%;
     display: flex;
     align-items: center; /* Centrar verticalmente */
     overflow: hidden;
 }
 
-/* --- FONDO E IMAGEN --- */
+/* Fondo con Imagen y Filtro Oscuro */
 .hero__bg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop'); 
+    background-image: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2; /* Al fondo de todo */
+    z-index: var(--z-back);
 }
 
-/* El Overlay (Capa oscura encima de la foto) */
+/* Capa oscura (Overlay) para que el texto se lea bien */
 .hero__bg::after {
     content: '';
     position: absolute;
@@ -374,176 +285,140 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Degradado: Negro sólido abajo -> Transparente arriba */
     background: linear-gradient(180deg, 
                 var(--bg-body) 0%, 
-                rgba(15, 17, 26, 0.8) 50%, 
-                rgba(15, 17, 26, 0.4) 100%);
-    z-index: -1;
+                rgba(15, 17, 26, 0.7) 40%, 
+                rgba(15, 17, 26, 0.5) 100%);
 }
 
-/* --- CONTENIDO --- */
+/* Contenedor del contenido */
 .hero__container {
     position: relative;
     display: grid;
     gap: 2rem;
-    padding-top: 4rem; /* Espacio para el header fijo */
+    padding-top: 4rem;
+    width: 100%;
 }
 
 .hero__content {
-    max-width: 600px; /* Que el texto no se estire demasiado */
-    z-index: var(--z-normal);
+    max-width: 600px;
 }
 
-/* Elementos para animar (Estado inicial: Oculto) */
+/* --- TEXTOS Y ANIMACIONES --- */
+/* Estado inicial (invisible y desplazado) */
 .hero__subtitle, 
 .hero__title, 
 .hero__description, 
 .hero__buttons, 
 .hero__social {
     opacity: 0;
-    transform: translateY(30px); /* Empujados hacia abajo */
-    transition: 0.8s ease-out; /* Suavidad de la animación */
+    transform: translateY(30px);
+    transition: 0.8s ease-out;
 }
 
-/* Clase que agrega JS para mostrar (Estado final) */
+/* Clase JS para hacer aparecer los elementos */
 .visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Tipografía */
 .hero__subtitle {
     display: block;
-    font-size: var(--small-size);
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
     letter-spacing: 2px;
     color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
 .hero__title {
-    font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive typography: min, ideal, max */
+    font-size: clamp(2.5rem, 5vw, 4.5rem); /* Texto responsive */
     line-height: 1.1;
     margin-bottom: 1.5rem;
     color: var(--text-title);
+    text-transform: uppercase;
 }
 
 .hero__description {
     font-size: 1.1rem;
-    color: var(--text-body);
     margin-bottom: 2.5rem;
     line-height: 1.6;
+    max-width: 450px;
 }
 
-/* --- BOTONES --- */
+/* Botones Principales */
 .hero__buttons {
     display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    flex-wrap: wrap; /* Si la pantalla es muy chica, bajan */
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-/* Estilo específico para el botón secundario (Link) */
-.btn--link {
-    color: var(--text-title);
-    font-weight: 600;
+.btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    transition: var(--transition);
+    padding: 1rem 2rem;
+    font-family: var(--font-title);
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.btn--primary {
+    background-color: var(--primary-color);
+    color: var(--bg-body);
+}
+
+.btn--primary:hover {
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+.btn--link {
+    color: var(--text-title);
 }
 
 .btn--link:hover {
     color: var(--primary-color);
 }
 
-/* --- REDES SOCIALES (Lateral) --- */
-.hero__social {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.hero__social-link {
-    font-size: 1.5rem;
-    color: var(--text-body);
-    transition: var(--transition);
-}
-
-.hero__social-link:hover {
-    color: var(--primary-color);
-    transform: translateY(-3px); /* Pequeño salto */
-}
-
-/* --- SCROLL INDICATOR (Flecha abajo) --- */
+/* Scroll Indicator (Flecha abajo animada) */
 .hero__scroll {
     position: absolute;
     bottom: 2rem;
-    right: 0; /* A la derecha en móvil por defecto o izquierda según diseño */
+    right: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    color: var(--text-body);
-    animation: bounce 2s infinite; /* Animación de rebote infinita */
-    cursor: pointer;
+    animation: bounce 2s infinite;
 }
 
 .hero__scroll-text {
-    font-size: var(--small-size);
+    font-size: 0.8rem;
     font-weight: 600;
-    writing-mode: vertical-rl; /* Texto vertical */
-    text-orientation: mixed;
+    writing-mode: vertical-rl;
 }
 
-/* Animación Bounce (Rebote) */
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(-10px); }
     60% { transform: translateY(-5px); }
 }
 
-/* =========================================
-   MEDIA QUERIES (Ajustes Escritorio)
-   ========================================= */
+/* Ajustes Responsive para PC */
 @media screen and (min-width: 768px) {
-    .hero__bg {
-        /* En PC, la imagen se puede ajustar mejor */
-        background-position: center top; 
-    }
-
     .hero__container {
-        grid-template-columns: 1fr max-content; /* Texto izquierda - Redes/Scroll derecha */
+        grid-template-columns: 1fr max-content;
         align-items: center;
-    }
-
-    /* Redes Sociales en Vertical a la derecha */
-    .hero__social {
-        flex-direction: column;
-        gap: 2rem;
-        margin-top: 0;
-        position: relative;
-    }
-
-    /* Línea decorativa conectando las redes */
-    .hero__social::after {
-        content: '';
-        position: absolute;
-        top: -3rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 1px;
-        height: 2rem;
-        background-color: var(--primary-color);
     }
     
     .hero__scroll {
-        /* En escritorio lo ponemos abajo a la izquierda o centro */
         left: 0;
         right: auto;
-        flex-direction: row; /* Texto horizontal */
+        flex-direction: row;
         writing-mode: horizontal-tb;
     }
-   }
-   
+}
