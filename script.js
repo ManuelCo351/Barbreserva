@@ -87,3 +87,37 @@ window.addEventListener('scroll', scrollReveal);
 
 // Llamamos a la función una vez al inicio por si ya hay elementos visibles
 scrollReveal();
+
+/* =========================================
+   LIGHTBOX (Galería Zoom)
+   ========================================= */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+const galleryItems = document.querySelectorAll('.gallery__item');
+
+if(lightbox){
+    // 1. Abrir Lightbox al hacer click en una imagen
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const img = item.querySelector('.gallery__img');
+            const src = img.getAttribute('src');
+            
+            lightbox.classList.add('active-lightbox');
+            lightboxImg.src = src;
+        });
+    });
+
+    // 2. Cerrar con el botón X
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active-lightbox');
+    });
+
+    // 3. Cerrar si tocas fuera de la foto (en lo negro)
+    lightbox.addEventListener('click', (e) => {
+        if(e.target !== lightboxImg) {
+            lightbox.classList.remove('active-lightbox');
+        }
+    });
+}
+
