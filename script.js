@@ -1,66 +1,63 @@
 /* =========================================
-   MENU SHOW & HIDDEN (Lógica del Menú Móvil)
+   1. MENÚ MÓVIL: MOSTRAR Y OCULTAR
    ========================================= */
 const navMenu = document.getElementById('nav-menu'),
       navToggle = document.getElementById('nav-toggle'),
       navClose = document.getElementById('nav-close');
 
-/* ===== MOSTRAR MENU ===== */
-/* Validamos si la constante existe (para evitar errores si cambias el HTML) */
+/* ===== MOSTRAR MENÚ (Botón Hamburguesa) ===== */
+/* Validamos si existe el botón para evitar errores */
 if(navToggle){
     navToggle.addEventListener('click', () =>{
-        // Añade la clase 'show-menu' al div del menú
-        // En CSS, esta clase cambia el top: -100% a top: 0
+        // Agrega la clase que hace bajar el menú (top: 0)
         navMenu.classList.add('show-menu');
     });
 }
 
-/* ===== OCULTAR MENU (Botón X) ===== */
+/* ===== OCULTAR MENÚ (Botón X) ===== */
 if(navClose){
     navClose.addEventListener('click', () =>{
-        // Quita la clase 'show-menu' y el menú vuelve a subir
+        // Quita la clase y el menú vuelve a subir (top: -100%)
         navMenu.classList.remove('show-menu');
     });
 }
 
 /* =========================================
-   REMOVE MENU MOBILE (UX)
-   Cierra el menú al hacer clic en cualquier link
+   2. CERRAR MENÚ AL TOCAR UN ENLACE
+   Mejora la experiencia: no obliga al usuario a cerrar manual.
    ========================================= */
 const navLink = document.querySelectorAll('.nav__link');
 
 const linkAction = () =>{
     const navMenu = document.getElementById('nav-menu');
-    // Cuando hacemos click en cada nav__link, removemos la clase show-menu
+    // Cuando se hace click en cualquier link, quitamos la clase show-menu
     navMenu.classList.remove('show-menu');
 }
 
-// Agregamos el evento a cada link del menú
+// Asignamos el evento "click" a CADA enlace del menú
 navLink.forEach(n => n.addEventListener('click', linkAction));
+
 /* =========================================
-   ANIMACIÓN DE ENTRADA (HERO REVEAL)
+   3. ANIMACIÓN DE ENTRADA (HERO REVEAL)
+   Hace aparecer los textos uno por uno al cargar la página.
    ========================================= */
 document.addEventListener('DOMContentLoaded', () => {
-    // Seleccionamos los elementos que queremos animar
-    const heroTitle = document.querySelector('.hero__title');
-    const heroSubtitle = document.querySelector('.hero__subtitle');
-    const heroDesc = document.querySelector('.hero__description');
-    const heroBtns = document.querySelector('.hero__buttons');
-    const heroSocial = document.querySelector('.hero__social');
+    // Seleccionamos los elementos de la portada
+    const elementsToAnimate = [
+        { el: document.querySelector('.hero__subtitle'), delay: 200 },
+        { el: document.querySelector('.hero__title'), delay: 400 },
+        { el: document.querySelector('.hero__description'), delay: 600 },
+        { el: document.querySelector('.hero__buttons'), delay: 800 },
+        { el: document.querySelector('.hero__social'), delay: 1000 }
+    ];
 
-    // Función simple para agregar la clase 'fade-in-up' con retraso
-    const animateElement = (element, delay) => {
-        if(element) {
+    // Recorremos la lista y aplicamos la clase 'visible' con retraso
+    elementsToAnimate.forEach(item => {
+        if(item.el) {
             setTimeout(() => {
-                element.classList.add('visible');
-            }, delay);
+                item.el.classList.add('visible');
+            }, item.delay);
         }
-    };
-
-    // Secuencia de tiempos (en milisegundos)
-    animateElement(heroSubtitle, 200); // 1. Aparece subtítulo
-    animateElement(heroTitle, 400);    // 2. Aparece Título
-    animateElement(heroDesc, 600);     // 3. Aparece Descripción
-    animateElement(heroBtns, 800);     // 4. Aparecen Botones
-    animateElement(heroSocial, 1000);  // 5. Aparecen Redes
+    });
 });
+
