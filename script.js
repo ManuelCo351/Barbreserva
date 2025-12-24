@@ -37,3 +37,30 @@ const linkAction = () =>{
 
 // Agregamos el evento a cada link del menú
 navLink.forEach(n => n.addEventListener('click', linkAction));
+/* =========================================
+   ANIMACIÓN DE ENTRADA (HERO REVEAL)
+   ========================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleccionamos los elementos que queremos animar
+    const heroTitle = document.querySelector('.hero__title');
+    const heroSubtitle = document.querySelector('.hero__subtitle');
+    const heroDesc = document.querySelector('.hero__description');
+    const heroBtns = document.querySelector('.hero__buttons');
+    const heroSocial = document.querySelector('.hero__social');
+
+    // Función simple para agregar la clase 'fade-in-up' con retraso
+    const animateElement = (element, delay) => {
+        if(element) {
+            setTimeout(() => {
+                element.classList.add('visible');
+            }, delay);
+        }
+    };
+
+    // Secuencia de tiempos (en milisegundos)
+    animateElement(heroSubtitle, 200); // 1. Aparece subtítulo
+    animateElement(heroTitle, 400);    // 2. Aparece Título
+    animateElement(heroDesc, 600);     // 3. Aparece Descripción
+    animateElement(heroBtns, 800);     // 4. Aparecen Botones
+    animateElement(heroSocial, 1000);  // 5. Aparecen Redes
+});
