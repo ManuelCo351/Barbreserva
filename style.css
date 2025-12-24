@@ -154,52 +154,56 @@ img {
     color: var(--bg-body);
     box-shadow: var(--glow-effect);
 }
-
 /* =========================================
-   4. MENÚ MÓVIL (Por defecto hasta 767px)
+   4. MENÚ MÓVIL (SOLO PARA CELULARES)
    ========================================= */
 @media screen and (max-width: 767px) {
     .nav__menu {
         position: fixed;
-        top: -100%; /* Oculto arriba de la pantalla */
+        top: -100%; /* Estado inicial: Oculto arriba */
         left: 0;
         width: 100%;
         background-color: var(--bg-body);
-        padding-block: 4rem;
+        padding-top: 5rem; /* Espacio para que no se pegue al techo */
+        padding-bottom: 3rem;
         text-align: center;
-        transition: .4s; /* Un poco más lento para que se vea elegante */
-        border-bottom: 1px solid var(--primary-color);
+        transition: 0.4s;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        z-index: 1000; /* IMPORTANTE: Para que tape todo lo demás */
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Clase que JS agrega para bajar el menú */
+    .show-menu {
+        top: 0; 
     }
 
     .nav__list {
         display: flex;
         flex-direction: column;
-        gap: 2.5rem;
+        gap: 2rem;
     }
 
     .nav__link {
-        color: var(--text-title);
+        font-size: 1.5rem; /* Letra más grande en celular */
         font-weight: 600;
-        font-size: 1.1rem;
         text-transform: uppercase;
-        transition: var(--transition);
+        color: var(--text-title);
     }
 
-    .nav__link:hover {
-        color: var(--primary-color);
-    }
-
+    /* Estilo del botón "X" para cerrar */
     .nav__close {
         position: absolute;
-        top: 1rem;
+        top: 1.5rem;
         right: 1.5rem;
+        font-size: 2.5rem; /* Icono GRANDE para tocar fácil */
+        color: var(--primary-color);
+        cursor: pointer;
+        display: block; /* Aseguramos que se vea */
     }
-}
-
-/* Clase JS para mostrar el menú */
-.show-menu {
-    top: 0; /* Baja a la vista */
 }
 
 /* =========================================
