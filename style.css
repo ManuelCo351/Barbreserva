@@ -575,4 +575,165 @@ img {
 /* Retrasos escalonados para las tarjetas (opcional para más estilo) */
 .services__card:nth-child(2) { transition-delay: 0.2s; }
 .services__card:nth-child(3) { transition-delay: 0.4s; }
-   
+/* =========================================
+   6. SECCIÓN GALERÍA (ESTILO URBANO)
+   ========================================= */
+
+/* --- GRID LAYOUT (LA REJILLA) --- */
+.gallery__grid {
+    display: grid;
+    /* Columnas automáticas: mínimo 250px, máximo lo que quepa */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Altura automática de las filas */
+    grid-auto-rows: 250px; 
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+/* --- ÍTEM DE LA GALERÍA (El contenedor de cada foto) --- */
+.gallery__item {
+    position: relative;
+    overflow: hidden; /* CLAVE: Para que el zoom no se salga del cuadro */
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* --- LA IMAGEN --- */
+.gallery__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Llena el cuadro sin deformarse */
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Animación suave */
+}
+
+/* Efecto Zoom al pasar el mouse sobre el ítem */
+.gallery__item:hover .gallery__img {
+    transform: scale(1.12); /* Aumenta un 12% */
+}
+
+/* --- EL OVERLAY (Capa oscura con ícono) --- */
+.gallery__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 17, 26, 0.7); /* Fondo oscuro semi-transparente */
+    backdrop-filter: blur(2px); /* Un ligero desenfoque al fondo */
+    
+    /* Centrar el ícono */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Estado inicial: Invisible */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+/* Mostrar overlay al pasar el mouse */
+.gallery__item:hover .gallery__overlay {
+    opacity: 1;
+}
+
+/* Ícono del overlay */
+.gallery__overlay i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    text-shadow: 0 0 15px var(--primary-color); /* Brillo neón */
+    
+    /* Pequeña animación de entrada para el ícono */
+    transform: translateY(20px);
+    transition: 0.4s 0.1s; /* 0.1s de retraso */
+}
+
+.gallery__item:hover .gallery__overlay i {
+    transform: translateY(0); /* Sube a su posición */
+}
+
+/* =========================================
+   MEDIA QUERIES (Hacer la grilla interesante en PC)
+   ========================================= */
+@media screen and (min-width: 768px) {
+    /* Hacemos que algunas fotos ocupen más espacio para romper la simetría */
+    
+    /* La foto 4 (la del ambiente grande) ocupará 2 columnas */
+    .gallery__item:nth-child(4) {
+        grid-column: span 2;
+    }
+    
+    /* La foto 1 ocupará 2 filas de alto */
+    .gallery__item:nth-child(1) {
+        grid-row: span 2;
+    }
+    /* Ajustamos la altura de las filas en PC para que se vea bien */
+    .gallery__grid {
+         grid-auto-rows: 300px;
+    }
+}
+
+/* =========================================
+   LIGHTBOX (VENTANA MODAL ZOOM)
+   ========================================= */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.92); /* Fondo casi negro total */
+    z-index: 2000; /* Encima de todo, incluso del header */
+    
+    /* Centrar la imagen grande */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    
+    /* Estado inicial: Oculto pero listo para animar */
+    opacity: 0;
+    visibility: hidden; /* No se puede clickear si no se ve */
+    transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+/* Clase JS para mostrar el Lightbox */
+.active-lightbox {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* La imagen grande dentro del modal */
+.lightbox__img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain; /* Asegura que se vea la foto entera */
+    border-radius: 4px;
+    border: 2px solid var(--primary-color); /* Borde neón */
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+    
+    /* Animación de entrada tipo "pop" */
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.active-lightbox .lightbox__img {
+    transform: scale(1); /* Tamaño real al abrir */
+}
+
+/* Botón de cerrar (X) */
+.lightbox__close {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+    font-size: 4rem;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    line-height: 1; /* Para alinear mejor la X */
+}
+
+.lightbox__close:hover {
+    color: var(--primary-color);
+    transform: rotate(90deg);
+   }
