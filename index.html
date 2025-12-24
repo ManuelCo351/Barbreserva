@@ -4,23 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="Urban Cuts - Barbería profesional. Cortes modernos, estilo urbano y la mejor atención. Reserva tu turno online.">
-    <meta name="keywords" content="barbería, cortes de pelo, fade, barba, estilo urbano, reservar turno">
-    <meta name="author" content="Tu Nombre">
+    <title>Urban Cuts | Barber Studio</title>
+    
+    <link rel="shortcut icon" href="#" type="image/x-icon">
 
-    <meta name="theme-color" content="#0F111A">
-
-    <title>Urban Cuts | Barbería Profesional</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
-    
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header class="header" id="header">
         <nav class="nav container">
             
@@ -31,7 +28,7 @@
             <div class="nav__menu" id="nav-menu">
                 <ul class="nav__list">
                     <li class="nav__item">
-                        <a href="#inicio" class="nav__link active-link">Inicio</a>
+                        <a href="#inicio" class="nav__link">Inicio</a>
                     </li>
                     <li class="nav__item">
                         <a href="#servicios" class="nav__link">Servicios</a>
@@ -51,7 +48,7 @@
 
             <div class="nav__actions">
                 <a href="#reserva" class="btn-header">Reservar</a>
-
+                
                 <div class="nav__toggle" id="nav-toggle">
                     <i class="ri-menu-4-line"></i>
                 </div>
@@ -59,9 +56,10 @@
             
         </nav>
     </header>
+
     <main class="main">
-        
-        <section class="hero section" id="inicio">
+
+        <section class="hero" id="inicio">
             <div class="hero__bg"></div>
 
             <div class="hero__container container">
@@ -70,42 +68,40 @@
                     <span class="hero__subtitle">EST. 2024 | BARBER STUDIO</span>
                     
                     <h1 class="hero__title">
-                        ELEVA TU <br>
-                        <span class="text-highlight">ESTILO</span> AL <br>
-                        SIGUIENTE NIVEL
+                        ELEVA TU <span class="text-highlight">ESTILO</span> <br>
+                        AL SIGUIENTE NIVEL
                     </h1>
-
+                    
                     <p class="hero__description">
-                        Más que un corte, una experiencia. Cortes de precisión, 
-                        ambiente exclusivo y el mejor servicio de la ciudad. 
-                        Tu imagen es nuestra prioridad.
+                        Más que un corte, una experiencia. Cortes de precisión, ambiente 
+                        exclusivo y el mejor servicio de la ciudad. Tu imagen es nuestra prioridad.
                     </p>
 
                     <div class="hero__buttons">
                         <a href="#reserva" class="btn btn--primary">
                             Reservar Turno <i class="ri-calendar-check-line"></i>
                         </a>
-                        <a href="https://wa.me/123456789" target="_blank" class="btn btn--link">
-                            WhatsApp <i class="ri-whatsapp-line"></i>
+                        <a href="#servicios" class="btn btn--link">
+                            Ver Servicios <i class="ri-arrow-right-down-line"></i>
+                        </a>
+                    </div>
+
+                    <div class="hero__social">
+                        <a href="#" target="_blank" class="hero__social-link">
+                            <i class="ri-instagram-line"></i>
+                        </a>
+                        <a href="#" target="_blank" class="hero__social-link">
+                            <i class="ri-tiktok-line"></i>
+                        </a>
+                        <a href="#" target="_blank" class="hero__social-link">
+                            <i class="ri-whatsapp-line"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="hero__social">
-                    <a href="https://instagram.com" target="_blank" class="hero__social-link">
-                        <i class="ri-instagram-line"></i>
-                    </a>
-                    <a href="https://tiktok.com" target="_blank" class="hero__social-link">
-                        <i class="ri-tiktok-line"></i>
-                    </a>
-                    <a href="https://facebook.com" target="_blank" class="hero__social-link">
-                        <i class="ri-facebook-circle-line"></i>
-                    </a>
-                </div>
-
                 <div class="hero__scroll">
                     <span class="hero__scroll-text">Scroll Down</span>
-                    <i class="ri-arrow-down-line hero__scroll-icon"></i>
+                    <i class="ri-arrow-down-line"></i>
                 </div>
             </div>
         </section>
@@ -118,7 +114,6 @@
                 </div>
 
                 <div class="services__grid">
-                    
                     <article class="services__card reveal-on-scroll">
                         <div class="services__icon-box">
                             <i class="ri-scissors-cut-line"></i>
@@ -160,11 +155,11 @@
                             Reservar <i class="ri-arrow-right-line"></i>
                         </a>
                     </article>
-
                 </div>
             </div>
-                </section>
-                <section class="gallery section" id="galeria">
+        </section>
+
+        <section class="gallery section" id="galeria">
             <div class="container">
                 
                 <div class="section__header reveal-on-scroll">
@@ -173,49 +168,35 @@
                 </div>
 
                 <div class="gallery__grid">
-                    
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop" alt="Corte Fade" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
 
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1599351431202-6e0005079746?q=80&w=2070&auto=format&fit=crop" alt="Barba Estilo" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
 
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=2070&auto=format&fit=crop" alt="Corte Urbano" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
 
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1974&auto=format&fit=crop" alt="Barbería Ambiente" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
 
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop" alt="Navaja" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
 
                     <div class="gallery__item reveal-on-scroll">
                         <img src="https://images.unsplash.com/photo-1512690459411-b9245aed8ad5?q=80&w=2070&auto=format&fit=crop" alt="Corte Clásico" class="gallery__img">
-                        <div class="gallery__overlay">
-                            <i class="ri-add-circle-line"></i>
-                        </div>
+                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
                     </div>
-
                 </div>
             </div>
         </section>
@@ -224,72 +205,67 @@
             <span class="lightbox__close" id="lightbox-close">&times;</span>
             <img class="lightbox__img" id="lightbox-img" src="">
         </div>
-                <section class="location section" id="ubicacion">
+
+        <section class="reservation section" id="reserva">
             <div class="container">
-                
+                <div class="section__header reveal-on-scroll">
+                    <h2 class="section__title">AGENDA TU <span class="text-highlight">TURNO</span></h2>
+                    <p class="section__subtitle">SIN ESPERAS. SIN LLAMADOS.</p>
+                </div>
+
+                <div class="reservation__container reveal-on-scroll">
+                    <div class="calendly-inline-widget" 
+                         data-url="https://calendly.com/ganzopaperas/30min?hide_gdpr_banner=1&background_color=161922&text_color=ffffff&primary_color=00f0ff" 
+                         style="min-width:320px;height:700px;">
+                    </div>
+                    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                </div>
+            </div>
+        </section>
+
+        <section class="location section" id="ubicacion">
+            <div class="container">
                 <div class="section__header reveal-on-scroll">
                     <h2 class="section__title">VISITA EL <span class="text-highlight">STUDIO</span></h2>
                     <p class="section__subtitle">TU NUEVO SPOT FAVORITO</p>
                 </div>
 
                 <div class="location__container">
-                    
                     <div class="location__content reveal-on-scroll">
-                        
                         <div class="location__info">
-                            <h3 class="location__title">
-                                <i class="ri-time-line text-highlight"></i> Horarios
-                            </h3>
+                            <h3 class="location__title"><i class="ri-time-line text-highlight"></i> Horarios</h3>
                             <ul class="location__list">
-                                <li><span>Lunes - Viernes:</span> 10:00 AM - 20:00 PM</li>
-                                <li><span>Sábados:</span> 10:00 AM - 18:00 PM</li>
+                                <li><span>Lun - Vie:</span> 10:00 - 20:00</li>
+                                <li><span>Sábados:</span> 10:00 - 18:00</li>
                                 <li><span>Domingos:</span> Cerrado</li>
                             </ul>
                         </div>
-
                         <div class="location__info">
-                            <h3 class="location__title">
-                                <i class="ri-map-pin-line text-highlight"></i> Dirección
-                            </h3>
+                            <h3 class="location__title"><i class="ri-map-pin-line text-highlight"></i> Dirección</h3>
                             <p>Av. San Martín 1234, Centro.</p>
-                            <p>Ciudad, Provincia.</p>
                             
-                            <h3 class="location__title" style="margin-top: 1.5rem;">
-                                <i class="ri-phone-line text-highlight"></i> Contacto
-                            </h3>
+                            <h3 class="location__title" style="margin-top: 1.5rem;"><i class="ri-phone-line text-highlight"></i> Contacto</h3>
                             <p>+54 9 11 1234-5678</p>
-                            <p>contacto@urbancuts.com</p>
                         </div>
-
                     </div>
 
                     <div class="location__map reveal-on-scroll">
                         <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.0168878894506!2d-58.38375908477038!3d-34.603738880459435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4aa9f0a6da5edb%3A0x11bead4e234e558b!2sObelisco!5e0!3m2!1ses!2sar!4v1675123456789!5m2!1ses!2sar" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.0168878894506!2d-58.38375908477038!3d-34.60373886500593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4aa9f0a6da5edb%3A0x11bead4e234e558b!2sObelisco!5e0!3m2!1ses!2sar!4v1625684381507!5m2!1ses!2sar" 
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
                         </iframe>
                     </div>
-
                 </div>
             </div>
         </section>
+
     </main>
+
     <footer class="footer">
         <div class="footer__container container">
-            
             <div class="footer__content">
-                <a href="#" class="footer__logo">
-                    URBAN<span class="text-highlight">CUTS.</span>
-                </a>
-                <p class="footer__description">
-                    Elevando el estándar de la barbería moderna. <br>
-                    Estilo, precisión y cultura urbana.
-                </p>
+                <a href="#" class="footer__logo">URBAN<span class="text-highlight">CUTS.</span></a>
+                <p class="footer__description">Elevando el estándar de la barbería moderna.</p>
             </div>
 
             <div class="footer__content">
@@ -298,26 +274,26 @@
                     <li><a href="#inicio" class="footer__link">Inicio</a></li>
                     <li><a href="#servicios" class="footer__link">Servicios</a></li>
                     <li><a href="#galeria" class="footer__link">Galería</a></li>
-                    <li><a href="#reserva" class="footer__link text-highlight">Reservar Turno</a></li>
+                    <li><a href="#reserva" class="footer__link text-highlight">Reservar</a></li>
                 </ul>
             </div>
 
             <div class="footer__content">
-                <h3 class="footer__title">Síguenos</h3>
+                <h3 class="footer__title">Redes</h3>
                 <div class="footer__social">
                     <a href="#" class="footer__social-link"><i class="ri-instagram-line"></i></a>
                     <a href="#" class="footer__social-link"><i class="ri-tiktok-line"></i></a>
-                    <a href="#" class="footer__social-link"><i class="ri-facebook-circle-line"></i></a>
+                    <a href="#" class="footer__social-link"><i class="ri-whatsapp-line"></i></a>
                 </div>
             </div>
-
         </div>
 
         <div class="footer__copy">
-            <p>&#169; 2024 Urban Cuts. Todos los derechos reservados.</p>
-            <p class="designer-credit">Designed by <span class="text-highlight">You</span></p>
+            <p>© 2024 Urban Cuts. Todos los derechos reservados.</p>
         </div>
     </footer>
-  <script src="script.js"></script>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
