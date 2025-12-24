@@ -941,3 +941,38 @@ img {
         min-height: 400px;
     }
 }
+/* =========================================
+   SECCIÓN RESERVA (WIDGET CALENDLY)
+   ========================================= */
+
+/* Contenedor principal de la reserva */
+.reservation__container {
+    background-color: #161922; /* Fondo oscuro (Grid) */
+    padding: 1rem;             /* Espacio interno reducido en móvil */
+    border-radius: 8px;        /* Bordes redondeados */
+    border: 1px solid rgba(255,255,255,0.05); /* Borde sutil */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);  /* Sombra suave */
+    
+    /* Flexbox para centrar el calendario vertical y horizontalmente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    overflow: hidden;    /* Evita que el calendario se salga del contenedor */
+    min-height: 700px;   /* Altura mínima para que quepa bien el widget */
+}
+
+/* Efecto opcional: Brillo al pasar el mouse por el contenedor */
+.reservation__container:hover {
+    border-color: rgba(0, 240, 255, 0.2); /* Se ilumina levemente en cian */
+    box-shadow: 0 10px 50px rgba(0, 240, 255, 0.05);
+}
+
+/* --- AJUSTES PARA PC (Escritorio) --- */
+@media screen and (min-width: 768px) {
+    .reservation__container {
+        padding: 2rem;      /* Más espacio en pantalla grande */
+        max-width: 1000px;  /* Ancho máximo para que no se vea gigante */
+        margin: 0 auto;     /* Centrado horizontalmente en la página */
+    }
+}
