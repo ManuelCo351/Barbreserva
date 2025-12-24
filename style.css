@@ -221,54 +221,63 @@ img {
 /* =========================================
    4. MENÚ MÓVIL (SOLO PARA CELULARES)
    ========================================= */
+/* ==================================================
+   CORRECCIÓN FINAL MENÚ MÓVIL (Pegar al final del archivo)
+   ================================================== */
 @media screen and (max-width: 767px) {
+    /* 1. Ocultar el menú por defecto */
     .nav__menu {
         position: fixed;
-        top: -100%; /* Estado inicial: Oculto arriba */
+        top: -150% !important; /* Lo mandamos bien arriba */
         left: 0;
         width: 100%;
-        background-color: var(--bg-body);
-        padding-top: 5rem; /* Espacio para que no se pegue al techo */
+        background-color: #0F111A;
+        padding-top: 6rem;
         padding-bottom: 3rem;
-        text-align: center;
         transition: 0.4s;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        z-index: 1000; /* IMPORTANTE: Para que tape todo lo demás */
-        
+        z-index: 9999; /* Encima de todo */
         display: flex;
         flex-direction: column;
         align-items: center;
-    }
-
-    /* Clase que JS agrega para bajar el menú */
-    .show-menu {
-        top: 0; 
-    }
-
-    .nav__list {
-        display: flex;
-        flex-direction: column;
         gap: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
+    /* 2. Clase para mostrarlo (cuando el JS funciona) */
+    .nav__menu.show-menu {
+        top: 0 !important;
+    }
+
+    /* 3. Estilo de los enlaces en móvil */
     .nav__link {
-        font-size: 1.5rem; /* Letra más grande en celular */
+        color: #fff;
+        font-size: 1.5rem;
         font-weight: 600;
-        text-transform: uppercase;
-        color: var(--text-title);
+        display: block;
     }
 
-    /* Estilo del botón "X" para cerrar */
+    /* 4. Arreglo del botón cerrar (X) */
     .nav__close {
+        display: block !important;
         position: absolute;
         top: 1.5rem;
         right: 1.5rem;
-        font-size: 2.5rem; /* Icono GRANDE para tocar fácil */
-        color: var(--primary-color);
+        font-size: 2.5rem;
+        color: #00F0FF; /* Cian Neón */
         cursor: pointer;
-        display: block; /* Aseguramos que se vea */
+        z-index: 10000; /* Lo más alto posible para que sea clickeable */
+        width: 40px;    /* Zona de click asegurada */
+        height: 40px;
+    }
+    
+    /* 5. Asegurar que la hamburguesa se vea */
+    .nav__toggle {
+        display: block !important;
+        font-size: 1.8rem;
+        cursor: pointer;
     }
 }
+
 
 /* =========================================
    5. RESPONSIVE DESKTOP (Desde 768px)
