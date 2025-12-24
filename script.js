@@ -61,3 +61,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/* =========================================
+   SCROLL REVEAL (Animación al bajar)
+   Detecta cuando un elemento entra en pantalla
+   ========================================= */
+const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+const scrollReveal = () => {
+    const triggerBottom = window.innerHeight * 0.85; // Se activa al 85% de la pantalla
+
+    revealElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+
+        if(elementTop < triggerBottom) {
+            element.classList.add('active-reveal');
+        } else {
+            // Opcional: Si quieres que desaparezca al subir, descomenta la linea de abajo
+            // element.classList.remove('active-reveal');
+        }
+    });
+}
+
+// Escuchamos el evento de scroll
+window.addEventListener('scroll', scrollReveal);
+
+// Llamamos a la función una vez al inicio por si ya hay elementos visibles
+scrollReveal();
