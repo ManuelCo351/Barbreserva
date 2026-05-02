@@ -1,299 +1,1405 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Urban Cuts | Barber Studio</title>
-    
-    <link rel="shortcut icon" href="#" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRON CUT — Barbería Premium</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Bebas Neue + Barlow Condensed + Barlow -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="style.css">
+  <!-- GSAP + ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            copper: { 300: '#e8a97e', 400: '#cd7f32', 500: '#b87333', 600: '#9a6128' }
+          },
+          fontFamily: {
+            display: ['"Bebas Neue"', 'sans-serif'],
+            condensed: ['"Barlow Condensed"', 'sans-serif'],
+            body: ['Barlow', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- ================================================================
+       CUSTOM CSS
+  ================================================================ -->
+  <style>
+    /* Base */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background-color: #080809;
+      color: #d4d4d8;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom Cursor ── */
+    #ic-cursor {
+      width: 10px; height: 10px;
+      background: #b87333;
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      top: 0; left: 0;
+      transform: translate(-50%,-50%);
+    }
+    #ic-cursor-ring {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(184,115,51,0.55);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      top: 0; left: 0;
+      transform: translate(-50%,-50%);
+      transition: width .25s, height .25s, opacity .25s;
+    }
+    body:not(:hover) #ic-cursor,
+    body:not(:hover) #ic-cursor-ring { opacity: 0; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: #080809; }
+    ::-webkit-scrollbar-thumb { background: #b87333; border-radius: 2px; }
+
+    /* ── Noise overlay ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 200;
+      opacity: .032;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Typography helpers ── */
+    .font-display { font-family: 'Bebas Neue', sans-serif; }
+    .font-condensed { font-family: 'Barlow Condensed', sans-serif; }
+
+    /* ── Diagonal stripe texture ── */
+    .stripe-texture {
+      background-image: repeating-linear-gradient(
+        -48deg,
+        transparent 0px, transparent 3px,
+        rgba(184,115,51,.055) 3px, rgba(184,115,51,.055) 4px
+      );
+    }
+
+    /* ── Grid overlay on hero ── */
+    .hero-grid {
+      background-image:
+        linear-gradient(rgba(184,115,51,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,115,51,.045) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* ── Horizontal copper accent line ── */
+    .copper-line::before {
+      content: '';
+      display: block;
+      width: 44px; height: 2px;
+      background: #b87333;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Navigation ── */
+    #ic-nav {
+      transition: background .4s ease, border-color .4s ease, backdrop-filter .4s ease;
+    }
+    #ic-nav.scrolled {
+      background: rgba(8,8,9,.94) !important;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .nav-link {
+      position: relative;
+      letter-spacing: .18em;
+      font-size: .7rem;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: #b87333;
+      transition: width .35s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Hero text ── */
+    .hero-word {
+      font-family: 'Bebas Neue', sans-serif;
+      line-height: .88;
+      will-change: transform, opacity;
+    }
+    .outline-copper {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(184,115,51,.65);
+    }
+
+    /* ── Service cards ── */
+    .svc-card {
+      background: #0c0c0e;
+      border: 1px solid rgba(255,255,255,.055);
+      transition: border-color .3s ease, background .3s ease;
+      will-change: transform, opacity;
+    }
+    .svc-card:hover {
+      background: #111113;
+      border-color: rgba(184,115,51,.45);
+    }
+    .svc-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: rgba(184,115,51,.2);
+    }
+    .svc-featured {
+      background: linear-gradient(135deg, rgba(184,115,51,.07), rgba(184,115,51,.02));
+      border-color: rgba(184,115,51,.3);
+    }
+    .svc-featured:hover { border-color: rgba(184,115,51,.6); }
+
+    /* ── Price tag ── */
+    .price-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      color: #e4e4e7;
+    }
+
+    /* ── Barber cards ── */
+    .barber-card .barber-img {
+      aspect-ratio: 1 / 1;
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      transition: border-color .3s;
+    }
+    .barber-card:hover .barber-img { border-color: rgba(184,115,51,.4); }
+
+    /* ── Form inputs ── */
+    .ic-input, .ic-select {
+      width: 100%;
+      background: rgba(255,255,255,.028);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #d4d4d8;
+      padding: .75rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .95rem;
+      letter-spacing: .03em;
+      transition: border-color .3s ease, background .3s ease;
+      appearance: none;
+    }
+    .ic-input:focus, .ic-select:focus {
+      outline: none;
+      border-color: #b87333;
+      background: rgba(184,115,51,.04);
+    }
+    .ic-select option { background: #111113; }
+
+    /* ── Time slots ── */
+    .time-slot {
+      border: 1px solid rgba(255,255,255,.07);
+      padding: .45rem 0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .14em;
+      color: #71717a;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, color .2s;
+      user-select: none;
+    }
+    .time-slot:hover:not(.disabled) {
+      border-color: rgba(184,115,51,.5);
+      color: #b87333;
+      background: rgba(184,115,51,.06);
+    }
+    .time-slot.active {
+      border-color: #b87333;
+      background: rgba(184,115,51,.14);
+      color: #b87333;
+    }
+    .time-slot.disabled {
+      opacity: .28;
+      cursor: not-allowed;
+    }
+
+    /* ── CTA button ── */
+    .btn-copper {
+      display: inline-block;
+      background: #b87333;
+      color: #080809;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      font-size: .8rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .35s, filter .25s;
+      cursor: pointer;
+    }
+    .btn-copper::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      transition: left .55s ease;
+    }
+    .btn-copper:hover::before { left: 110%; }
+    .btn-copper:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 0 32px rgba(184,115,51,.38);
+    }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: .6rem;
+      border: 1px solid rgba(184,115,51,.45);
+      color: #b87333;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      padding: .95rem 2rem;
+      font-size: .8rem;
+      transition: background .3s, border-color .3s, box-shadow .3s;
+    }
+    .btn-ghost:hover {
+      background: rgba(184,115,51,.1);
+      border-color: #b87333;
+      box-shadow: 0 0 24px rgba(184,115,51,.18);
+    }
+
+    /* ── VIP section ── */
+    .vip-section {
+      background: linear-gradient(160deg, #0a0a0b 0%, #120d06 45%, #0a0a0b 100%);
+    }
+    .vip-reward-card {
+      background: rgba(184,115,51,.04);
+      border: 1px solid rgba(184,115,51,.15);
+      transition: border-color .3s, background .3s;
+    }
+    .vip-reward-card:hover {
+      background: rgba(184,115,51,.08);
+      border-color: rgba(184,115,51,.4);
+    }
+    .vip-reward-card.highlight {
+      background: rgba(184,115,51,.09);
+      border-color: rgba(184,115,51,.35);
+    }
+    .step-circle {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #b87333, #cd7f32);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Social links ── */
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      color: #71717a;
+      transition: color .3s, border-color .3s;
+    }
+    .social-link:hover { color: #e4e4e7; border-color: rgba(184,115,51,.5); }
+
+    /* ── Ticker ── */
+    #ic-ticker-wrap { overflow: hidden; }
+    #ic-ticker-inner { display: flex; width: max-content; gap: 3rem; align-items: center; }
+    .ticker-item {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .68rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: #52525b;
+      white-space: nowrap;
+    }
+    .ticker-dot { color: #b87333; font-size: .5rem; }
+
+    /* ── Scroll indicator ── */
+    .scroll-track { width: 1px; height: 44px; background: rgba(255,255,255,.08); position: relative; overflow: hidden; }
+    .scroll-bar { width: 100%; height: 50%; background: #b87333; position: absolute; top: -50%; }
+
+    /* ── Stagger initial states ── */
+    .js-fade { opacity: 0; transform: translateY(36px); }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .65rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: #b87333;
+    }
+
+    /* ── Dividers ── */
+    .copper-gradient-line {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(184,115,51,.5), transparent);
+    }
+
+    /* ── Booking success ── */
+    #booking-success {
+      background: rgba(184,115,51,.06);
+      border: 1px solid rgba(184,115,51,.22);
+    }
+  </style>
 </head>
-<body>
 
-    <header class="header" id="header">
-        <nav class="nav container">
-            
-            <a href="#" class="nav__logo">
-                URBAN<span class="text-highlight">CUTS.</span>
+<!-- ================================================================
+     HTML STRUCTURE
+================================================================ -->
+<body class="bg-zinc-950">
+
+  <!-- Custom cursor -->
+  <div id="ic-cursor"></div>
+  <div id="ic-cursor-ring"></div>
+
+  <!-- ──────────────────────────────────────────
+       NAVIGATION
+  ────────────────────────────────────────── -->
+  <nav id="ic-nav" class="fixed top-0 inset-x-0 z-50 h-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 h-full flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-7 h-7 border flex items-center justify-center" style="border-color: rgba(184,115,51,.7);">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <path d="M2 12L7 2L12 12M4.5 8.5H9.5" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="font-display text-lg tracking-[.22em] text-zinc-100">IRON CUT</span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#servicios" class="nav-link uppercase text-zinc-400 hover:text-zinc-200 transition-colors">Servicios</a>
+        <a href="#barberos" class="nav-link uppercase text-zinc-400 hover:text-zinc-200 transition-colors">El Equipo</a>
+        <a href="#reserva" class="nav-link uppercase text-zinc-400 hover:text-zinc-200 transition-colors">Reservar</a>
+        <a href="#vip" class="nav-link uppercase text-zinc-400 hover:text-zinc-200 transition-colors">Garage VIP</a>
+        <a href="#reserva" class="btn-ghost text-xs py-2 px-5">Turno</a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="ic-menu-btn" class="md:hidden flex flex-col gap-[5px] p-2 cursor-pointer" aria-label="Menú">
+        <span class="block w-6 h-[1px] bg-zinc-400 transition-all duration-300 origin-center" id="hb1"></span>
+        <span class="block w-4 h-[1px] bg-zinc-400 transition-all duration-300" id="hb2"></span>
+        <span class="block w-6 h-[1px] bg-zinc-400 transition-all duration-300 origin-center" id="hb3"></span>
+      </button>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="ic-mobile-nav" class="hidden md:hidden border-t" style="background: rgba(8,8,9,.97); border-color: rgba(255,255,255,.05);">
+      <div class="max-w-7xl mx-auto px-6 py-6 space-y-5">
+        <a href="#servicios" class="block section-label" onclick="closeMobileMenu()">Servicios</a>
+        <a href="#barberos" class="block section-label" onclick="closeMobileMenu()">El Equipo</a>
+        <a href="#reserva" class="block section-label" onclick="closeMobileMenu()">Reservar</a>
+        <a href="#vip" class="block section-label" onclick="closeMobileMenu()">Garage VIP</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ──────────────────────────────────────────
+       HERO SECTION
+  ────────────────────────────────────────── -->
+  <section id="hero" class="relative min-h-screen flex flex-col justify-center hero-grid overflow-hidden">
+
+    <!-- Vertical left accent line -->
+    <div class="absolute left-10 top-0 bottom-0 w-px pointer-events-none"
+         style="background: linear-gradient(to bottom, transparent, rgba(184,115,51,.28) 25%, rgba(184,115,51,.28) 75%, transparent);">
+    </div>
+
+    <!-- Giant gear — decorative -->
+    <div class="absolute -right-40 top-1/2 -translate-y-1/2 pointer-events-none" style="opacity:.025;" aria-hidden="true">
+      <svg width="660" height="660" viewBox="0 0 200 200" fill="none">
+        <path fill="#b87333" d="
+          M100 5 L108 0 L92 0 Z
+          M195 92 L200 100 L200 100 L195 108 Z
+          M100 195 L108 200 L92 200 Z
+          M5 92 L0 100 L5 108 Z
+        "/>
+        <circle cx="100" cy="100" r="88" stroke="#b87333" stroke-width="10"/>
+        <circle cx="100" cy="100" r="55" stroke="#b87333" stroke-width="6"/>
+        <circle cx="100" cy="100" r="22" stroke="#b87333" stroke-width="4" fill="none"/>
+        <!-- gear teeth -->
+        <rect x="96" y="2" width="8" height="20" fill="#b87333" rx="2"/>
+        <rect x="96" y="178" width="8" height="20" fill="#b87333" rx="2"/>
+        <rect x="2" y="96" width="20" height="8" fill="#b87333" rx="2"/>
+        <rect x="178" y="96" width="20" height="8" fill="#b87333" rx="2"/>
+        <rect x="61" y="12" width="8" height="18" fill="#b87333" rx="2" transform="rotate(-45 65 21)"/>
+        <rect x="132" y="170" width="8" height="18" fill="#b87333" rx="2" transform="rotate(-45 136 179)"/>
+        <rect x="12" y="61" width="18" height="8" fill="#b87333" rx="2" transform="rotate(-45 21 65)"/>
+        <rect x="170" y="131" width="18" height="8" fill="#b87333" rx="2" transform="rotate(-45 179 135)"/>
+        <rect x="128" y="12" width="8" height="18" fill="#b87333" rx="2" transform="rotate(45 132 21)"/>
+        <rect x="64" y="170" width="8" height="18" fill="#b87333" rx="2" transform="rotate(45 68 179)"/>
+        <rect x="170" y="61" width="18" height="8" fill="#b87333" rx="2" transform="rotate(45 179 65)"/>
+        <rect x="12" y="131" width="18" height="8" fill="#b87333" rx="2" transform="rotate(45 21 135)"/>
+      </svg>
+    </div>
+
+    <!-- Bottom gradient -->
+    <div class="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
+         style="background: linear-gradient(to top, #080809, transparent);">
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-24 pb-16">
+
+      <!-- Pre-label -->
+      <div id="h-pre" class="flex items-center gap-4 mb-8" style="opacity:0;">
+        <div class="w-10 h-px" style="background:#b87333;"></div>
+        <span class="section-label">Est. 2019 — Buenos Aires, ARG</span>
+      </div>
+
+      <!-- Title lines -->
+      <div class="overflow-hidden mb-1">
+        <div id="h-l1" class="hero-word" style="font-size: clamp(5rem, 14vw, 13rem); opacity:0; transform: translateY(60px);">
+          IRON
+        </div>
+      </div>
+      <div class="overflow-hidden">
+        <div id="h-l2" class="hero-word outline-copper" style="font-size: clamp(5rem, 14vw, 13rem); opacity:0; transform: translateY(60px);">
+          CUT
+        </div>
+      </div>
+
+      <!-- Subtitle -->
+      <p id="h-sub" class="mt-8 mb-10 max-w-sm font-condensed font-light text-zinc-400 leading-relaxed"
+         style="font-size:1.05rem; letter-spacing:.05em; opacity:0; transform: translateY(24px);">
+        Precisión de taller. Estética de garaje.<br>El corte que define al hombre detrás de la máquina.
+      </p>
+
+      <!-- CTAs -->
+      <div id="h-cta" class="flex flex-wrap items-center gap-5" style="opacity:0; transform: translateY(20px);">
+        <a href="#reserva" class="btn-copper">Reservar Turno</a>
+        <a href="#servicios" class="btn-ghost" id="h-see-svcs">
+          <span>Ver Servicios</span>
+          <svg width="18" height="9" viewBox="0 0 18 9" fill="none">
+            <path d="M0 4.5H16M12.5 1L16 4.5L12.5 8" stroke="#b87333" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div id="h-stats" class="flex items-center gap-10 mt-16 lg:mt-24" style="opacity:0; transform: translateY(20px);">
+        <div>
+          <div class="font-display text-4xl text-zinc-100">5+</div>
+          <div class="section-label mt-1" style="color:#52525b;">Años en Ruta</div>
+        </div>
+        <div class="w-px h-8 bg-zinc-800"></div>
+        <div>
+          <div class="font-display text-4xl text-zinc-100">3K+</div>
+          <div class="section-label mt-1" style="color:#52525b;">Clientes VIP</div>
+        </div>
+        <div class="w-px h-8 bg-zinc-800"></div>
+        <div>
+          <div class="font-display text-4xl text-zinc-100">4</div>
+          <div class="section-label mt-1" style="color:#52525b;">Barberos Elite</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div id="h-scroll" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+         style="opacity:0;">
+      <span class="section-label" style="color:#3f3f46; font-size:.6rem;">scroll</span>
+      <div class="scroll-track">
+        <div id="scroll-bar-anim" class="scroll-bar"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────────
+       TICKER BAND
+  ────────────────────────────────────────── -->
+  <div class="stripe-texture border-y" style="border-color: rgba(184,115,51,.14); padding: .6rem 0;">
+    <div id="ic-ticker-wrap">
+      <div id="ic-ticker-inner">
+        <!-- JS duplicates these for loop -->
+        <span class="ticker-item">Corte Clásico</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Perfilado de Barba</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Afeitado con Navaja</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Fade Degradado</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Tratamiento Capilar</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Corte + Barba</span>
+        <span class="ticker-dot">✦</span>
+        <span class="ticker-item">Cejas Express</span>
+        <span class="ticker-dot">✦</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ──────────────────────────────────────────
+       SERVICIOS SECTION
+  ────────────────────────────────────────── -->
+  <section id="servicios" class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+
+      <!-- Header -->
+      <div class="mb-16 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+        <div>
+          <div class="copper-line"></div>
+          <div class="section-label mb-3">01 — Servicios</div>
+          <h2 class="font-display text-6xl lg:text-8xl text-zinc-100 leading-none">EL MENÚ<br>DEL TALLER</h2>
+        </div>
+        <p class="font-condensed font-light text-zinc-500 max-w-xs text-sm leading-relaxed lg:pb-3">
+          Cada servicio ejecutado con la precisión de un mecánico de élite. Sin prisa. Sin errores.
+        </p>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style="background: rgba(255,255,255,.035);">
+
+        <!-- 01 -->
+        <article class="svc-card js-fade p-8 group relative">
+          <header class="flex items-start justify-between mb-5">
+            <span class="svc-num">01</span>
+            <div class="w-8 h-8 flex items-center justify-center border opacity-30 group-hover:opacity-70 transition-opacity" style="border-color: rgba(184,115,51,.6);">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 7H12M7 2V12" stroke="#b87333" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Corte Clásico</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">Lavado, corte a tijera o máquina y peinado con productos de primera. El clásico que no falla.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(255,255,255,.06);">
+            <span class="price-tag">$2.800</span>
+            <span class="section-label" style="color:#3f3f46;">45 min</span>
+          </footer>
+        </article>
+
+        <!-- 02 -->
+        <article class="svc-card js-fade p-8 group relative">
+          <header class="flex items-start justify-between mb-5">
+            <span class="svc-num">02</span>
+          </header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Perfilado de Barba</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">Definición de líneas, contorno y acabado impecable. La barba que habla antes que vos.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(255,255,255,.06);">
+            <span class="price-tag">$1.800</span>
+            <span class="section-label" style="color:#3f3f46;">30 min</span>
+          </footer>
+        </article>
+
+        <!-- 03 — FEATURED -->
+        <article class="svc-card svc-featured js-fade p-8 group relative">
+          <div class="absolute top-4 right-4 font-condensed text-xs tracking-[.18em] uppercase px-2 py-1"
+               style="background: rgba(184,115,51,.18); color:#b87333;">Popular</div>
+          <header class="flex items-start justify-between mb-5">
+            <span class="svc-num" style="color:rgba(184,115,51,.4);">03</span>
+          </header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Corte + Barba</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">El combo completo. Corte de cabello y perfilado de barba en una sola sesión de taller premium.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(184,115,51,.15);">
+            <span class="price-tag">$4.200</span>
+            <span class="section-label" style="color:#3f3f46;">70 min</span>
+          </footer>
+        </article>
+
+        <!-- 04 -->
+        <article class="svc-card js-fade p-8 group relative">
+          <header class="mb-5"><span class="svc-num">04</span></header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Afeitado con Navaja</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">Ritual completo. Toalla caliente, crema artesanal y navaja recta. La experiencia de otro siglo.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(255,255,255,.06);">
+            <span class="price-tag">$2.200</span>
+            <span class="section-label" style="color:#3f3f46;">35 min</span>
+          </footer>
+        </article>
+
+        <!-- 05 -->
+        <article class="svc-card js-fade p-8 group relative">
+          <header class="mb-5"><span class="svc-num">05</span></header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Fade Degradado</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">Transiciones perfectas. Low, mid o high fade ejecutados con precisión milimétrica. Sin márgenes de error.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(255,255,255,.06);">
+            <span class="price-tag">$3.000</span>
+            <span class="section-label" style="color:#3f3f46;">50 min</span>
+          </footer>
+        </article>
+
+        <!-- 06 -->
+        <article class="svc-card js-fade p-8 group relative">
+          <header class="mb-5"><span class="svc-num">06</span></header>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 tracking-wide mb-2">Tratamiento Capilar</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed mb-6">Hidratación profunda y keratina. El mantenimiento preventivo que todo motor —y todo cabello— necesita.</p>
+          <footer class="flex items-center justify-between pt-5 border-t" style="border-color: rgba(255,255,255,.06);">
+            <span class="price-tag">$3.500</span>
+            <span class="section-label" style="color:#3f3f46;">60 min</span>
+          </footer>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────────
+       BARBEROS SECTION
+  ────────────────────────────────────────── -->
+  <section id="barberos" class="py-20 border-t" style="border-color: rgba(255,255,255,.04);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+
+      <div class="flex flex-col lg:flex-row lg:items-center gap-14">
+        <!-- Text -->
+        <div class="lg:w-2/5">
+          <div class="copper-line"></div>
+          <div class="section-label mb-3">02 — El Equipo</div>
+          <h2 class="font-display text-6xl lg:text-7xl text-zinc-100 leading-none mb-6">LOS<br>MECÁNICOS</h2>
+          <p class="font-condensed text-sm text-zinc-500 leading-relaxed max-w-xs">
+            Cada barbero es un especialista. Elegí el tuyo y agendá tu próxima sesión.
+          </p>
+        </div>
+
+        <!-- Barbers grid -->
+        <div class="lg:w-3/5 grid grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <div class="barber-card js-fade text-center cursor-pointer group">
+            <div class="barber-img mb-4 w-full">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="16" r="8" stroke="rgba(184,115,51,.45)" stroke-width="1.4"/>
+                <path d="M6 38C6 30 13.2 25 22 25C30.8 25 38 30 38 38" stroke="rgba(184,115,51,.45)" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="font-condensed font-semibold text-sm text-zinc-200 tracking-wide mb-1">Marcos "El Titan"</div>
+            <div class="section-label" style="color:#3f3f46; font-size:.6rem;">Fade & Clásico</div>
+          </div>
+
+          <div class="barber-card js-fade text-center cursor-pointer group">
+            <div class="barber-img mb-4 w-full">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="16" r="8" stroke="rgba(184,115,51,.45)" stroke-width="1.4"/>
+                <path d="M6 38C6 30 13.2 25 22 25C30.8 25 38 30 38 38" stroke="rgba(184,115,51,.45)" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="font-condensed font-semibold text-sm text-zinc-200 tracking-wide mb-1">Diego "Chrome"</div>
+            <div class="section-label" style="color:#3f3f46; font-size:.6rem;">Barba & Navaja</div>
+          </div>
+
+          <div class="barber-card js-fade text-center cursor-pointer group">
+            <div class="barber-img mb-4 w-full">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="16" r="8" stroke="rgba(184,115,51,.45)" stroke-width="1.4"/>
+                <path d="M6 38C6 30 13.2 25 22 25C30.8 25 38 30 38 38" stroke="rgba(184,115,51,.45)" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="font-condensed font-semibold text-sm text-zinc-200 tracking-wide mb-1">Rodrigo "V8"</div>
+            <div class="section-label" style="color:#3f3f46; font-size:.6rem;">Diseño & Fade</div>
+          </div>
+
+          <div class="barber-card js-fade text-center cursor-pointer group">
+            <div class="barber-img mb-4 w-full">
+              <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="16" r="8" stroke="rgba(184,115,51,.45)" stroke-width="1.4"/>
+                <path d="M6 38C6 30 13.2 25 22 25C30.8 25 38 30 38 38" stroke="rgba(184,115,51,.45)" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="font-condensed font-semibold text-sm text-zinc-200 tracking-wide mb-1">Luis "Piston"</div>
+            <div class="section-label" style="color:#3f3f46; font-size:.6rem;">Clásico & Trat.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────────
+       SISTEMA DE RESERVAS
+  ────────────────────────────────────────── -->
+  <section id="reserva" class="py-24 lg:py-32 border-t relative overflow-hidden" style="border-color: rgba(255,255,255,.04);">
+
+    <!-- Radial glow -->
+    <div class="absolute inset-0 pointer-events-none"
+         style="background: radial-gradient(ellipse 60% 60% at 100% 50%, rgba(184,115,51,.04), transparent);">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+
+        <!-- Left -->
+        <div class="js-fade">
+          <div class="copper-line"></div>
+          <div class="section-label mb-3">03 — Reservas</div>
+          <h2 class="font-display text-6xl lg:text-8xl text-zinc-100 leading-none mb-8">
+            AGENDÁ<br>TU SESIÓN
+          </h2>
+          <p class="font-condensed font-light text-sm text-zinc-500 leading-relaxed mb-10 max-w-sm">
+            Elegí servicio, barbero y horario. Confirmación instantánea por WhatsApp.
+          </p>
+
+          <!-- Features -->
+          <ul class="space-y-4">
+            <li class="flex items-center gap-4">
+              <div class="w-5 h-5 flex items-center justify-center shrink-0" style="border:1px solid rgba(184,115,51,.45);">
+                <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                  <path d="M1 3.5L3 5.5L8 1" stroke="#b87333" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="font-condensed text-sm text-zinc-400">Confirmación por WhatsApp</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <div class="w-5 h-5 flex items-center justify-center shrink-0" style="border:1px solid rgba(184,115,51,.45);">
+                <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                  <path d="M1 3.5L3 5.5L8 1" stroke="#b87333" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="font-condensed text-sm text-zinc-400">Cancelación gratis hasta 2hs antes</span>
+            </li>
+            <li class="flex items-center gap-4">
+              <div class="w-5 h-5 flex items-center justify-center shrink-0" style="border:1px solid rgba(184,115,51,.45);">
+                <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                  <path d="M1 3.5L3 5.5L8 1" stroke="#b87333" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="font-condensed text-sm text-zinc-400">Puntos VIP acreditados automáticamente</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right: Form -->
+        <div id="booking-form-wrap" class="js-fade" style="transform: translateX(30px);">
+          <div class="p-8 lg:p-10" style="background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.07);">
+
+            <!-- Service -->
+            <div class="mb-5">
+              <label class="block section-label mb-3">Servicio</label>
+              <select id="sel-service" class="ic-select">
+                <option value="">Seleccioná un servicio</option>
+                <option value="clasico">Corte Clásico — $2.800</option>
+                <option value="barba">Perfilado de Barba — $1.800</option>
+                <option value="combo">Corte + Barba — $4.200</option>
+                <option value="navaja">Afeitado con Navaja — $2.200</option>
+                <option value="fade">Fade Degradado — $3.000</option>
+                <option value="trat">Tratamiento Capilar — $3.500</option>
+              </select>
+            </div>
+
+            <!-- Barber -->
+            <div class="mb-5">
+              <label class="block section-label mb-3">Barbero</label>
+              <select id="sel-barber" class="ic-select">
+                <option value="">Cualquier barbero disponible</option>
+                <option value="marcos">Marcos "El Titan" — Fade & Clásico</option>
+                <option value="diego">Diego "Chrome" — Barba & Navaja</option>
+                <option value="rodrigo">Rodrigo "V8" — Diseño & Fade</option>
+                <option value="luis">Luis "Piston" — Clásico & Trat.</option>
+              </select>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-5">
+              <label class="block section-label mb-3">Fecha</label>
+              <input type="date" id="inp-date" class="ic-input" style="color-scheme:dark;" />
+            </div>
+
+            <!-- Time slots -->
+            <div class="mb-6">
+              <label class="block section-label mb-3">Horario Disponible</label>
+              <div class="grid grid-cols-4 gap-2" id="slots-grid">
+                <button class="time-slot" onclick="pickSlot(this)">09:00</button>
+                <button class="time-slot" onclick="pickSlot(this)">09:45</button>
+                <button class="time-slot" onclick="pickSlot(this)">10:30</button>
+                <button class="time-slot" onclick="pickSlot(this)">11:15</button>
+                <button class="time-slot" onclick="pickSlot(this)">12:00</button>
+                <button class="time-slot disabled" disabled>12:45</button>
+                <button class="time-slot disabled" disabled>13:30</button>
+                <button class="time-slot" onclick="pickSlot(this)">14:15</button>
+                <button class="time-slot" onclick="pickSlot(this)">15:00</button>
+                <button class="time-slot" onclick="pickSlot(this)">15:45</button>
+                <button class="time-slot" onclick="pickSlot(this)">16:30</button>
+                <button class="time-slot disabled" disabled>17:15</button>
+              </div>
+            </div>
+
+            <!-- Name -->
+            <div class="mb-7">
+              <label class="block section-label mb-3">Tu Nombre</label>
+              <input type="text" id="inp-name" placeholder="Nombre y apellido" class="ic-input" />
+            </div>
+
+            <!-- Submit -->
+            <button id="btn-submit" class="btn-copper w-full text-center" onclick="submitBooking()">
+              Confirmar Reserva
+            </button>
+
+            <!-- Success message -->
+            <div id="booking-success" class="hidden mt-5 p-4 text-center">
+              <p class="font-condensed text-sm tracking-wide" style="color:#b87333;">
+                ✦ &nbsp;Reserva recibida — te contactamos por WhatsApp en minutos.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────────
+       GARAGE VIP
+  ────────────────────────────────────────── -->
+  <section id="vip" class="py-24 lg:py-32 vip-section relative overflow-hidden">
+
+    <!-- Decorative lines -->
+    <div class="copper-gradient-line absolute top-0 inset-x-0"></div>
+    <div class="copper-gradient-line absolute bottom-0 inset-x-0"></div>
+
+    <!-- Faded gear left -->
+    <div class="absolute -left-32 bottom-0 pointer-events-none" style="opacity:.018;" aria-hidden="true">
+      <svg width="520" height="520" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="90" stroke="#b87333" stroke-width="12"/>
+        <circle cx="100" cy="100" r="55" stroke="#b87333" stroke-width="6"/>
+        <circle cx="100" cy="100" r="18" fill="#b87333"/>
+        <rect x="94" y="4" width="12" height="24" rx="4" fill="#b87333"/>
+        <rect x="94" y="172" width="12" height="24" rx="4" fill="#b87333"/>
+        <rect x="4" y="94" width="24" height="12" rx="4" fill="#b87333"/>
+        <rect x="172" y="94" width="24" height="12" rx="4" fill="#b87333"/>
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+
+      <!-- Header -->
+      <div class="text-center mb-16 lg:mb-20">
+        <div class="flex justify-center mb-5">
+          <div class="w-10 h-px" style="background:#b87333;"></div>
+        </div>
+        <div class="section-label mb-4">04 — Fidelización</div>
+        <h2 class="font-display text-7xl lg:text-9xl text-zinc-100 leading-none mb-5">
+          EL GARAGE<br><span style="color:#b87333;">VIP</span>
+        </h2>
+        <p class="font-condensed font-light text-sm text-zinc-500 max-w-md mx-auto leading-relaxed">
+          Cada corte suma combustible. Acumulá puntos y canjeálos por servicios premium completamente gratis.
+        </p>
+      </div>
+
+      <!-- How it works (3 steps) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0 mb-16"
+           style="border: 1px solid rgba(184,115,51,.14);">
+
+        <div class="p-8 lg:p-10 js-fade" style="border-right: 1px solid rgba(184,115,51,.1);">
+          <div class="step-circle mb-6">
+            <span class="font-display text-2xl text-zinc-950">01</span>
+          </div>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 mb-3 tracking-wide">Cada Servicio = Puntos</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed">Cada visita al taller acumula puntos automáticamente en tu cuenta. Sin tarjetas, sin papeles.</p>
+        </div>
+
+        <div class="p-8 lg:p-10 js-fade" style="border-right: 1px solid rgba(184,115,51,.1);">
+          <div class="step-circle mb-6">
+            <span class="font-display text-2xl text-zinc-950">02</span>
+          </div>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 mb-3 tracking-wide">Acumulás Crédito</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed">Los puntos se van sumando. Cuanto más venís, más rápido llegás al siguiente nivel de recompensas.</p>
+        </div>
+
+        <div class="p-8 lg:p-10 js-fade">
+          <div class="step-circle mb-6">
+            <span class="font-display text-2xl text-zinc-950">03</span>
+          </div>
+          <h3 class="font-condensed font-semibold text-lg text-zinc-100 mb-3 tracking-wide">Canjeás Recompensas</h3>
+          <p class="text-sm text-zinc-500 leading-relaxed">Usá tus puntos en servicios gratis, productos de taller o upgrades exclusivos para miembros VIP.</p>
+        </div>
+
+      </div>
+
+      <!-- Reward cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+
+        <div class="vip-reward-card js-fade p-6 text-center">
+          <div class="font-display text-5xl mb-1" style="color:#b87333;">5</div>
+          <div class="section-label mb-4" style="color:#52525b;">cortes</div>
+          <div class="w-full h-px mb-4" style="background:rgba(184,115,51,.14);"></div>
+          <div class="font-condensed text-sm text-zinc-300">Cejas Express Gratis</div>
+        </div>
+
+        <div class="vip-reward-card js-fade p-6 text-center">
+          <div class="font-display text-5xl mb-1" style="color:#b87333;">10</div>
+          <div class="section-label mb-4" style="color:#52525b;">cortes</div>
+          <div class="w-full h-px mb-4" style="background:rgba(184,115,51,.14);"></div>
+          <div class="font-condensed text-sm text-zinc-300">Perfilado de Barba Gratis</div>
+        </div>
+
+        <div class="vip-reward-card highlight js-fade p-6 text-center relative overflow-hidden">
+          <div class="absolute top-2 right-2 font-condensed text-xs tracking-[.14em] uppercase px-2 py-0.5"
+               style="background:#b87333; color:#080809;">VIP</div>
+          <div class="font-display text-5xl mb-1" style="color:#b87333;">20</div>
+          <div class="section-label mb-4" style="color:#52525b;">cortes</div>
+          <div class="w-full h-px mb-4" style="background:rgba(184,115,51,.2);"></div>
+          <div class="font-condensed text-sm text-zinc-300">Corte + Barba Gratis</div>
+        </div>
+
+        <div class="vip-reward-card js-fade p-6 text-center">
+          <div class="font-display text-5xl mb-1" style="color:#b87333;">∞</div>
+          <div class="section-label mb-4" style="color:#52525b;">miembro</div>
+          <div class="w-full h-px mb-4" style="background:rgba(184,115,51,.14);"></div>
+          <div class="font-condensed text-sm text-zinc-300">Prioridad en Reservas</div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center">
+        <a href="#reserva" class="btn-copper">Unite al Garage VIP</a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ──────────────────────────────────────────
+       FOOTER
+  ────────────────────────────────────────── -->
+  <footer id="ic-footer" class="border-t py-16 lg:py-20" style="border-color: rgba(255,255,255,.05);">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16 mb-10">
+
+        <!-- Brand -->
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-7 h-7 border flex items-center justify-center" style="border-color:rgba(184,115,51,.7);">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                <path d="M2 12L7 2L12 12M4.5 8.5H9.5" stroke="#b87333" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="font-display text-xl tracking-[.22em] text-zinc-100">IRON CUT</span>
+          </div>
+          <p class="font-condensed font-light text-sm text-zinc-500 leading-relaxed max-w-xs mb-6">
+            Barbería premium en el corazón de Buenos Aires. Precisión de taller, estética de garaje.
+          </p>
+          <!-- Social -->
+          <div class="flex gap-3">
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/>
+              </svg>
             </a>
-
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list">
-                    <li class="nav__item">
-                        <a href="#inicio" class="nav__link">Inicio</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#servicios" class="nav__link">Servicios</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#galeria" class="nav__link">Galería</a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#ubicacion" class="nav__link">Ubicación</a>
-                    </li>
-                </ul>
-
-                <div class="nav__close" id="nav-close">
-                    <i class="ri-close-line"></i>
-                </div>
-            </div>
-
-            <div class="nav__actions">
-                <a href="#reserva" class="btn-header">Reservar</a>
-                
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="ri-menu-4-line"></i>
-                </div>
-            </div>
-            
-        </nav>
-    </header>
-
-    <main class="main">
-
-        <section class="hero" id="inicio">
-            <div class="hero__bg"></div>
-
-            <div class="hero__container container">
-                
-                <div class="hero__content">
-                    <span class="hero__subtitle">EST. 2024 | BARBER STUDIO</span>
-                    
-                    <h1 class="hero__title">
-                        ELEVA TU <span class="text-highlight">ESTILO</span> <br>
-                        AL SIGUIENTE NIVEL
-                    </h1>
-                    
-                    <p class="hero__description">
-                        Más que un corte, una experiencia. Cortes de precisión, ambiente 
-                        exclusivo y el mejor servicio de la ciudad. Tu imagen es nuestra prioridad.
-                    </p>
-
-                    <div class="hero__buttons">
-                        <a href="#reserva" class="btn btn--primary">
-                            Reservar Turno <i class="ri-calendar-check-line"></i>
-                        </a>
-                        <a href="#servicios" class="btn btn--link">
-                            Ver Servicios <i class="ri-arrow-right-down-line"></i>
-                        </a>
-                    </div>
-
-                    <div class="hero__social">
-                        <a href="#" target="_blank" class="hero__social-link">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#" target="_blank" class="hero__social-link">
-                            <i class="ri-tiktok-line"></i>
-                        </a>
-                        <a href="#" target="_blank" class="hero__social-link">
-                            <i class="ri-whatsapp-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="hero__scroll">
-                    <span class="hero__scroll-text">Scroll Down</span>
-                    <i class="ri-arrow-down-line"></i>
-                </div>
-            </div>
-        </section>
-                <section class="services section" id="servicios">
-            <div class="container">
-                
-                <div class="section__header reveal-on-scroll">
-                    <h2 class="section__title">NUESTROS <span class="text-highlight">SERVICIOS</span></h2>
-                    <p class="section__subtitle">CALIDAD PREMIUM & ESTILO URBANO</p>
-                </div>
-
-                <div class="services__grid">
-                    <article class="services__card reveal-on-scroll">
-                        <div class="services__icon-box">
-                            <i class="ri-scissors-cut-line"></i>
-                        </div>
-                        <h3 class="services__title">Corte Urbano</h3>
-                        <p class="services__description">
-                            Fade, degradados y cortes de tendencia. Incluye lavado y styling.
-                        </p>
-                        <span class="services__price">$4.500</span>
-                        <a href="#reserva" class="services__button">
-                            Reservar <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </article>
-
-                    <article class="services__card reveal-on-scroll">
-                        <div class="services__icon-box">
-                            <i class="ri-magic-line"></i>
-                        </div>
-                        <h3 class="services__title">Barba & Ritual</h3>
-                        <p class="services__description">
-                            Perfilado con navaja, toalla caliente y aceites esenciales.
-                        </p>
-                        <span class="services__price">$3.000</span>
-                        <a href="#reserva" class="services__button">
-                            Reservar <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </article>
-
-                    <article class="services__card reveal-on-scroll">
-                        <div class="services__icon-box">
-                            <i class="ri-vip-crown-line"></i>
-                        </div>
-                        <h3 class="services__title">Combo Full</h3>
-                        <p class="services__description">
-                            La experiencia completa: Corte + Barba + Mascarilla Black.
-                        </p>
-                        <span class="services__price">$7.000</span>
-                        <a href="#reserva" class="services__button">
-                            Reservar <i class="ri-arrow-right-line"></i>
-                        </a>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="gallery section" id="galeria">
-            <div class="container">
-                
-                <div class="section__header reveal-on-scroll">
-                    <h2 class="section__title">NUESTROS <span class="text-highlight">CORTES</span></h2>
-                    <p class="section__subtitle">HALL OF FAME</p>
-                </div>
-
-                <div class="gallery__grid">
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070&auto=format&fit=crop" alt="Corte Fade" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1599351431202-6e0005079746?q=80&w=2070&auto=format&fit=crop" alt="Barba Estilo" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=2070&auto=format&fit=crop" alt="Corte Urbano" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1974&auto=format&fit=crop" alt="Barbería Ambiente" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop" alt="Navaja" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-
-                    <div class="gallery__item reveal-on-scroll">
-                        <img src="https://images.unsplash.com/photo-1512690459411-b9245aed8ad5?q=80&w=2070&auto=format&fit=crop" alt="Corte Clásico" class="gallery__img">
-                        <div class="gallery__overlay"><i class="ri-add-circle-line"></i></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="lightbox" id="lightbox">
-            <span class="lightbox__close" id="lightbox-close">&times;</span>
-            <img class="lightbox__img" id="lightbox-img" src="">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="WhatsApp">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="TikTok">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/>
+              </svg>
+            </a>
+          </div>
         </div>
 
-        <section class="reservation section" id="reserva">
-            <div class="container">
-                <div class="section__header reveal-on-scroll">
-                    <h2 class="section__title">AGENDA TU <span class="text-highlight">TURNO</span></h2>
-                    <p class="section__subtitle">SIN ESPERAS. SIN LLAMADOS.</p>
-                </div>
-
-                <div class="reservation__container reveal-on-scroll">
-                    <div class="calendly-inline-widget" 
-                         data-url="https://calendly.com/ganzopaperas/30min?hide_gdpr_banner=1&background_color=161922&text_color=ffffff&primary_color=00f0ff" 
-                         style="min-width:320px;height:700px;">
-                    </div>
-                    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-                </div>
-            </div>
-        </section>
-
-        <section class="location section" id="ubicacion">
-            <div class="container">
-                <div class="section__header reveal-on-scroll">
-                    <h2 class="section__title">VISITA EL <span class="text-highlight">STUDIO</span></h2>
-                    <p class="section__subtitle">TU NUEVO SPOT FAVORITO</p>
-                </div>
-
-                <div class="location__container">
-                    <div class="location__content reveal-on-scroll">
-                        <div class="location__info">
-                            <h3 class="location__title"><i class="ri-time-line text-highlight"></i> Horarios</h3>
-                            <ul class="location__list">
-                                <li><span>Lun - Vie:</span> 10:00 - 20:00</li>
-                                <li><span>Sábados:</span> 10:00 - 18:00</li>
-                                <li><span>Domingos:</span> Cerrado</li>
-                            </ul>
-                        </div>
-                        <div class="location__info">
-                            <h3 class="location__title"><i class="ri-map-pin-line text-highlight"></i> Dirección</h3>
-                            <p>Av. San Martín 1234, Centro.</p>
-                            
-                            <h3 class="location__title" style="margin-top: 1.5rem;"><i class="ri-phone-line text-highlight"></i> Contacto</h3>
-                            <p>+54 9 11 1234-5678</p>
-                        </div>
-                    </div>
-
-                    <div class="location__map reveal-on-scroll">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.0168878894506!2d-58.38375908477038!3d-34.60373886500593!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4aa9f0a6da5edb%3A0x11bead4e234e558b!2sObelisco!5e0!3m2!1ses!2sar!4v1625684381507!5m2!1ses!2sar" 
-                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="footer">
-        <div class="footer__container container">
-            <div class="footer__content">
-                <a href="#" class="footer__logo">URBAN<span class="text-highlight">CUTS.</span></a>
-                <p class="footer__description">Elevando el estándar de la barbería moderna.</p>
-            </div>
-
-            <div class="footer__content">
-                <h3 class="footer__title">Links</h3>
-                <ul class="footer__links">
-                    <li><a href="#inicio" class="footer__link">Inicio</a></li>
-                    <li><a href="#servicios" class="footer__link">Servicios</a></li>
-                    <li><a href="#galeria" class="footer__link">Galería</a></li>
-                    <li><a href="#reserva" class="footer__link text-highlight">Reservar</a></li>
-                </ul>
-            </div>
-
-            <div class="footer__content">
-                <h3 class="footer__title">Redes</h3>
-                <div class="footer__social">
-                    <a href="#" class="footer__social-link"><i class="ri-instagram-line"></i></a>
-                    <a href="#" class="footer__social-link"><i class="ri-tiktok-line"></i></a>
-                    <a href="#" class="footer__social-link"><i class="ri-whatsapp-line"></i></a>
-                </div>
-            </div>
+        <!-- Dirección -->
+        <div>
+          <h4 class="section-label mb-5">Ubicación</h4>
+          <address class="not-italic space-y-2 text-sm text-zinc-400 font-condensed leading-relaxed">
+            <p>Av. Corrientes 1842, Piso 2</p>
+            <p>CABA, Argentina</p>
+          </address>
+          <a href="#" class="inline-flex items-center gap-2 mt-4 section-label hover:opacity-70 transition-opacity">
+            <span>Ver en Maps</span>
+            <svg width="11" height="6" viewBox="0 0 12 6" fill="none">
+              <path d="M0 3H10M7.5 1L10 3L7.5 5" stroke="#b87333" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </a>
         </div>
 
-        <div class="footer__copy">
-            <p>© 2024 Urban Cuts. Todos los derechos reservados.</p>
+        <!-- Horarios -->
+        <div>
+          <h4 class="section-label mb-5">Horarios</h4>
+          <dl class="space-y-3 font-condensed text-sm">
+            <div class="flex justify-between gap-6">
+              <dt class="text-zinc-500">Lun — Vie</dt>
+              <dd class="text-zinc-300">09:00 – 20:00</dd>
+            </div>
+            <div class="flex justify-between gap-6">
+              <dt class="text-zinc-500">Sábados</dt>
+              <dd class="text-zinc-300">09:00 – 18:00</dd>
+            </div>
+            <div class="flex justify-between gap-6">
+              <dt class="text-zinc-500">Domingos</dt>
+              <dd class="text-zinc-600">Cerrado</dd>
+            </div>
+          </dl>
         </div>
-    </footer>
 
-    <script src="script.js"></script>
+      </div>
 
+      <!-- Bottom bar -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-8 border-t"
+           style="border-color: rgba(255,255,255,.04);">
+        <p class="font-condensed text-xs text-zinc-700 tracking-wider">© 2025 IRON CUT. Todos los derechos reservados.</p>
+        <p class="font-condensed text-xs text-zinc-700 tracking-[.2em] uppercase">Hecho con motor y precisión.</p>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ================================================================
+       VANILLA JAVASCRIPT — GSAP ANIMATIONS & INTERACTIVITY
+  ================================================================ -->
+  <script>
+    /* ──────────────────────────────────────────
+       1. GSAP — Plugin Registration
+    ────────────────────────────────────────── */
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    /* ──────────────────────────────────────────
+       2. CUSTOM CURSOR
+    ────────────────────────────────────────── */
+    const icCursor     = document.getElementById('ic-cursor');
+    const icCursorRing = document.getElementById('ic-cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      gsap.to(icCursor, { x: mx, y: my, duration: 0.06, ease: 'none' });
+    });
+
+    (function tickRing() {
+      rx += (mx - rx) * 0.1;
+      ry += (my - ry) * 0.1;
+      gsap.set(icCursorRing, { x: rx, y: ry });
+      requestAnimationFrame(tickRing);
+    })();
+
+    document.querySelectorAll('a, button, .svc-card, .barber-card, .time-slot, .vip-reward-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        gsap.to(icCursor, { scale: 2.6, duration: 0.3, ease: 'power2.out' });
+        gsap.to(icCursorRing, { scale: 1.6, opacity: 0.5, duration: 0.3 });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(icCursor, { scale: 1, duration: 0.3 });
+        gsap.to(icCursorRing, { scale: 1, opacity: 1, duration: 0.3 });
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       3. NAVBAR SCROLL STATE
+    ────────────────────────────────────────── */
+    const nav = document.getElementById('ic-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    /* ──────────────────────────────────────────
+       4. MOBILE MENU
+    ────────────────────────────────────────── */
+    const mobileNav = document.getElementById('ic-mobile-nav');
+    const menuBtn   = document.getElementById('ic-menu-btn');
+    let menuOpen    = false;
+
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileNav.classList.toggle('hidden', !menuOpen);
+      // Animate hamburger
+      const [h1, h2, h3] = ['hb1','hb2','hb3'].map(id => document.getElementById(id));
+      if (menuOpen) {
+        gsap.to(h1, { rotate: 45, y: 6, duration: 0.25 });
+        gsap.to(h2, { opacity: 0, duration: 0.2 });
+        gsap.to(h3, { rotate: -45, y: -6, duration: 0.25 });
+      } else {
+        gsap.to([h1, h3], { rotate: 0, y: 0, duration: 0.25 });
+        gsap.to(h2, { opacity: 1, duration: 0.2 });
+      }
+    });
+
+    function closeMobileMenu() {
+      menuOpen = false;
+      mobileNav.classList.add('hidden');
+      gsap.to(['#hb1','#hb3'], { rotate: 0, y: 0, duration: 0.25 });
+      gsap.to('#hb2', { opacity: 1, duration: 0.2 });
+    }
+    window.closeMobileMenu = closeMobileMenu;
+
+    /* ──────────────────────────────────────────
+       5. SMOOTH SCROLL (via GSAP ScrollToPlugin)
+    ────────────────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        closeMobileMenu();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        gsap.to(window, {
+          scrollTo: { y: target, offsetY: 62 },
+          duration: 1.1,
+          ease: 'power3.inOut'
+        });
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       6. HERO ENTRANCE ANIMATIONS
+    ────────────────────────────────────────── */
+    const heroTl = gsap.timeline({ delay: 0.25 });
+
+    heroTl
+      .to('#h-pre', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+      .to('#h-l1',  { opacity: 1, y: 0, duration: 1.05, ease: 'power4.out' }, '-=0.3')
+      .to('#h-l2',  { opacity: 1, y: 0, duration: 1.05, ease: 'power4.out' }, '-=0.75')
+      .to('#h-sub', { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }, '-=0.55')
+      .to('#h-cta', { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }, '-=0.4')
+      .to('#h-stats', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.3')
+      .to('#h-scroll', { opacity: 1, duration: 0.7 }, '-=0.2');
+
+    // Animate scrollbar indicator on loop
+    gsap.to('#scroll-bar-anim', {
+      y: '100%',
+      duration: 1.1,
+      ease: 'power2.inOut',
+      repeat: -1,
+      delay: 1.5
+    });
+
+    /* ──────────────────────────────────────────
+       7. TICKER TAPE ANIMATION
+    ────────────────────────────────────────── */
+    const tickerInner = document.getElementById('ic-ticker-inner');
+    // Triple the content for a seamless infinite scroll
+    tickerInner.innerHTML += tickerInner.innerHTML + tickerInner.innerHTML;
+
+    gsap.to(tickerInner, {
+      x: () => -(tickerInner.scrollWidth / 3),
+      duration: 28,
+      ease: 'linear',
+      repeat: -1
+    });
+
+    /* ──────────────────────────────────────────
+       8. SERVICES CARDS — SCROLL STAGGER
+    ────────────────────────────────────────── */
+    // Services section — stagger cards on scroll
+    gsap.utils.toArray('#servicios .js-fade').forEach((card, i) => {
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        ease: 'power3.out',
+        delay: i * 0.09,
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 86%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       9. BARBERS CARDS — STAGGER
+    ────────────────────────────────────────── */
+    gsap.utils.toArray('#barberos .js-fade').forEach((card, i) => {
+      gsap.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+        delay: i * 0.12,
+        scrollTrigger: {
+          trigger: '#barberos',
+          start: 'top 75%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       10. BOOKING SECTION
+    ────────────────────────────────────────── */
+    // Left column fade-up
+    gsap.utils.toArray('#reserva .js-fade').forEach((el, i) => {
+      const isRight = el.id === 'booking-form-wrap';
+      gsap.to(el, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        delay: i * 0.15,
+        scrollTrigger: {
+          trigger: '#reserva',
+          start: 'top 68%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       11. VIP SECTION — STAGGER
+    ────────────────────────────────────────── */
+    // VIP heading scale
+    ScrollTrigger.create({
+      trigger: '#vip',
+      start: 'top 70%',
+      onEnter: () => {
+        gsap.from('#vip h2', { scale: 0.88, opacity: 0, duration: 1.3, ease: 'power4.out' });
+      }
+    });
+
+    // Steps + reward cards stagger
+    gsap.utils.toArray('#vip .js-fade').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        ease: 'power3.out',
+        delay: i * 0.1,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       12. FOOTER FADE UP
+    ────────────────────────────────────────── */
+    gsap.from('#ic-footer', {
+      opacity: 0,
+      y: 28,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '#ic-footer',
+        start: 'top 90%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    /* ──────────────────────────────────────────
+       13. SECTION H2 HEADINGS — GENERIC SCROLL REVEAL
+    ────────────────────────────────────────── */
+    document.querySelectorAll('h2.font-display').forEach(h => {
+      // Only animate those that aren't already handled
+      ScrollTrigger.create({
+        trigger: h,
+        start: 'top 82%',
+        onEnter: () => {
+          gsap.from(h, { opacity: 0, y: 40, duration: 0.9, ease: 'power3.out' });
+        }
+      });
+    });
+
+    /* ──────────────────────────────────────────
+       14. COPPER GLOW ON CTA HOVER
+    ────────────────────────────────────────── */
+    document.querySelectorAll('.btn-copper').forEach(btn => {
+      btn.addEventListener('mouseenter', () =>
+        gsap.to(btn, { boxShadow: '0 0 36px rgba(184,115,51,.42)', duration: 0.35 }));
+      btn.addEventListener('mouseleave', () =>
+        gsap.to(btn, { boxShadow: '0 0 0px rgba(184,115,51,0)', duration: 0.35 }));
+    });
+
+    /* ──────────────────────────────────────────
+       15. BOOKING — DATE DEFAULT
+    ────────────────────────────────────────── */
+    const dateInp = document.getElementById('inp-date');
+    const tmrw = new Date();
+    tmrw.setDate(tmrw.getDate() + 1);
+    dateInp.min   = tmrw.toISOString().split('T')[0];
+    dateInp.value = tmrw.toISOString().split('T')[0];
+
+    /* ──────────────────────────────────────────
+       16. TIME SLOT SELECTION
+    ────────────────────────────────────────── */
+    function pickSlot(el) {
+      if (el.classList.contains('disabled')) return;
+      document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      // Small pop animation
+      gsap.fromTo(el, { scale: 0.9 }, { scale: 1, duration: 0.25, ease: 'back.out(2)' });
+    }
+    window.pickSlot = pickSlot;
+
+    /* ──────────────────────────────────────────
+       17. BOOKING FORM SUBMISSION
+    ────────────────────────────────────────── */
+    function submitBooking() {
+      const service = document.getElementById('sel-service').value;
+      const name    = document.getElementById('inp-name').value.trim();
+      const slot    = document.querySelector('.time-slot.active');
+
+      if (!service || !name || !slot) {
+        // Shake the submit button
+        gsap.to('#btn-submit', {
+          x: -8, duration: 0.07,
+          repeat: 7, yoyo: true,
+          ease: 'power1.inOut',
+          onComplete: () => gsap.set('#btn-submit', { x: 0 })
+        });
+        // Flash missing fields
+        if (!service) gsap.fromTo('#sel-service', { borderColor: 'rgba(220,38,38,.8)' }, { borderColor: 'rgba(255,255,255,.08)', duration: 0.8 });
+        if (!name)    gsap.fromTo('#inp-name',    { borderColor: 'rgba(220,38,38,.8)' }, { borderColor: 'rgba(255,255,255,.08)', duration: 0.8 });
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit');
+      const msg = document.getElementById('booking-success');
+
+      gsap.to(btn, { opacity: 0, y: -8, duration: 0.35, onComplete: () => {
+        btn.style.display = 'none';
+        msg.classList.remove('hidden');
+        gsap.from(msg, { opacity: 0, y: 12, duration: 0.55, ease: 'power3.out' });
+      }});
+    }
+    window.submitBooking = submitBooking;
+
+    /* ──────────────────────────────────────────
+       18. PARALLAX — Hero grid subtle movement
+    ────────────────────────────────────────── */
+    gsap.to('.hero-grid', {
+      backgroundPositionY: '30%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5
+      }
+    });
+
+  </script>
 </body>
 </html>
